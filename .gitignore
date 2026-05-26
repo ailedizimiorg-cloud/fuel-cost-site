@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local temp files
+*.zip
+package.json.broken
+*_cache.csv
+venv/
+.pytest_cache/
+__pycache__/
+

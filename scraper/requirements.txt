@@ -1,0 +1,7 @@
+pandas
+requests
+supabase
+python-dotenv
+openpyxl
+playwright
+eia-python

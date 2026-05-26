@@ -9,6 +9,6 @@ export async function GET(request: Request) {
   
   return NextResponse.json({
     city: data.city || 'Istanbul',
-    country: data.country_name || 'Turkey'
+    country: data.country_code || 'TR' // ülke kodu döndür
   });
 }
