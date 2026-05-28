@@ -1,9 +1,23 @@
 import { createAdminClient } from './supabaseClient';
+import { translate } from './i18n';
+
 // lib/seo-utils.ts
-export function generateDescription(city: string, price: number, currency: string = '$'): string {
+export function generateDescription(
+  city: string,
+  price: number,
+  currency: string = '$',
+  countryCode: string = 'US'
+): string {
   const consumption = 7;
   const costPerKm = ((price * consumption) / 100).toFixed(3);
-  return `In ${city}, the current price of gasoline is ${currency}${price}. For a standard car consuming ${consumption}L/100km, driving 1km costs ${currency}${costPerKm}. This guide provides real-time updates and cost analysis for drivers in the region.`;
+  
+  return translate(countryCode, 'description', {
+    city: city.charAt(0).toUpperCase() + city.slice(1),
+    price: price.toFixed(2),
+    currency,
+    consumption,
+    costPerKm,
+  });
 }
 
 export async function getComparisonData(city: string, countryCode: string) {

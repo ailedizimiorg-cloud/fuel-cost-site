@@ -5,21 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FuelPrices } from "@/lib/fuel-api";
+import { translate } from "@/lib/i18n";
 
 interface CalculatorProps {
   initialPrices: FuelPrices;
+  countryCode: string;
 }
-
-const fuelTypeLabels: { [key in keyof FuelPrices]: string } = {
-  gasoline_price: "Gasoline",
-  diesel_price: "Diesel",
-  lpg_price: "LPG",
-  electric_price: "Electricity",
-  data_source: "Data Source",
-  currency: "Currency",
-  currency_code: "Currency Code",
-  currency_symbol: "Currency Symbol"
-};
 
 const fuelTypeKeys: (keyof FuelPrices)[] = [
   "gasoline_price",
@@ -28,7 +19,7 @@ const fuelTypeKeys: (keyof FuelPrices)[] = [
   "electric_price"
 ];
 
-export default function Calculator({ initialPrices }: CalculatorProps) {
+export default function Calculator({ initialPrices, countryCode }: CalculatorProps) {
   // Find the first available fuel type
   const defaultFuelType = fuelTypeKeys.find(key => {
     const val = initialPrices[key];
@@ -66,11 +57,15 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
   const unitLabel = isElectric ? "kWh" : "Liter";
   const consLabel = isElectric ? "kWh/100km" : "L/100km";
 
+  const translatedUnitLabel = translate(countryCode, `units.${unitLabel}`);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 w-full max-w-4xl mx-auto my-8">
       {/* Left side: Tabbed fuel types list and source details */}
       <div className="md:col-span-7 space-y-6">
-        <h3 className="text-xl font-semibold text-white tracking-tight mb-2">Select Fuel Type</h3>
+        <h3 className="text-xl font-semibold text-white tracking-tight mb-2">
+          {translate(countryCode, 'selectFuelType')}
+        </h3>
         
         {/* Dynamic Brutalist Tabs with prices inside */}
         <div className="grid grid-cols-2 gap-3">
@@ -85,8 +80,12 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
                   key={key}
                   className="p-4 rounded-xl border border-dashed border-gray-800 text-gray-600 bg-gray-900/30 select-none opacity-50"
                 >
-                  <span className="block text-xs uppercase font-medium tracking-wider">{fuelTypeLabels[key]}</span>
-                  <span className="block text-sm font-semibold mt-1">Not Available</span>
+                  <span className="block text-xs uppercase font-medium tracking-wider">
+                    {translate(countryCode, `fuelTypes.${key}`)}
+                  </span>
+                  <span className="block text-sm font-semibold mt-1">
+                    {translate(countryCode, 'notAvailable')}
+                  </span>
                 </div>
               );
             }
@@ -102,7 +101,7 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
                 }`}
               >
                 <span className={`block text-xs uppercase font-medium tracking-wider ${isActive ? "text-gray-600" : "text-gray-500"}`}>
-                  {fuelTypeLabels[key]}
+                  {translate(countryCode, `fuelTypes.${key}`)}
                 </span>
                 <span className="block text-2xl font-bold mt-1 tracking-tight">
                   {currencySymbol}{val.toFixed(3)}
@@ -115,16 +114,18 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
         {/* Source & Metadata Card */}
         <div className="bg-gray-900/50 border border-gray-800/80 p-5 rounded-xl space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Data Source</span>
+            <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+              {translate(countryCode, 'dataSource')}
+            </span>
             <span className="px-2 py-0.5 text-xs font-semibold rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              Verified
+              {translate(countryCode, 'verified')}
             </span>
           </div>
           <p className="text-lg font-medium text-gray-200">
             {dataSource}
           </p>
           <p className="text-sm text-gray-400">
-            Prices are updated continuously using our automated multi-source pipeline. Active integration utilizes direct-feed parameters for this city to ensure calculation accuracy.
+            {translate(countryCode, 'dataSourceDescription')}
           </p>
         </div>
       </div>
@@ -133,12 +134,16 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
       <div className="md:col-span-5">
         <Card className="bg-gray-900/40 border border-gray-800/80 rounded-xl h-full shadow-lg">
           <CardHeader>
-            <CardTitle className="text-lg text-white font-semibold">Cost Estimator</CardTitle>
+            <CardTitle className="text-lg text-white font-semibold">
+              {translate(countryCode, 'costEstimator')}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             {/* Price Override Input */}
             <div className="space-y-2">
-              <Label className="text-sm text-gray-400">Price per {unitLabel} ({currencySymbol})</Label>
+              <Label className="text-sm text-gray-400">
+                {translate(countryCode, 'pricePerUnit', { unit: translatedUnitLabel, currency: currencySymbol })}
+              </Label>
               <Input
                 type="number"
                 step="0.001"
@@ -150,7 +155,9 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
 
             {/* Consumption Input */}
             <div className="space-y-2">
-              <Label className="text-sm text-gray-400">Consumption ({consLabel})</Label>
+              <Label className="text-sm text-gray-400">
+                {translate(countryCode, 'consumptionLabel', { cons: consLabel })}
+              </Label>
               <Input
                 type="number"
                 step="0.1"
@@ -162,7 +169,9 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
 
             {/* Monthly Distance Input */}
             <div className="space-y-2">
-              <Label className="text-sm text-gray-400">Calculate for distance (km)</Label>
+              <Label className="text-sm text-gray-400">
+                {translate(countryCode, 'calculateDistance')}
+              </Label>
               <Input
                 type="number"
                 step="100"
@@ -175,13 +184,17 @@ export default function Calculator({ initialPrices }: CalculatorProps) {
             {/* Result Outputs */}
             <div className="pt-4 border-t border-gray-800/80 space-y-4">
               <div>
-                <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">Cost per KM</p>
+                <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
+                  {translate(countryCode, 'costPerKm')}
+                </p>
                 <div className="text-3xl font-bold text-white tracking-tight mt-0.5">
                   {currencySymbol}{costPerKm.toFixed(3)}
                 </div>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">Total Cost ({monthlyDistance} km)</p>
+                <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
+                  {translate(countryCode, 'totalCost', { distance: monthlyDistance })}
+                </p>
                 <div className="text-xl font-semibold text-gray-200 mt-0.5">
                   {currencySymbol}{periodCost.toFixed(2)}
                 </div>

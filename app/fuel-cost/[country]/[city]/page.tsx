@@ -2,12 +2,12 @@
 import { getFuelPrices, generateDescription, getComparisonData } from "@/lib/fuel-api";
 import Calculator from "@/components/Calculator";
 import { notFound } from 'next/navigation';
+import { translate } from "@/lib/i18n";
 
 export default async function FuelPage({ params }: { params: Promise<{ country: string; city: string }> }) {
   const { country, city } = await params;
   
   // URL'den gelen ülke adının 2 harfli ISO kodu olduğunu varsayıyoruz (örn: "tr", "us")
-  // Bu kod, veritabanı sorgusu için doğrudan kullanılacak.
   const prices = await getFuelPrices(country, city);
   console.log("Prices:", prices);
 
@@ -24,12 +24,20 @@ export default async function FuelPage({ params }: { params: Promise<{ country: 
   }
   
   // SEO için açıklama ve karşılaştırma verilerini oluşturuyoruz.
-  // İlk geçerli fiyatı bulup onu kullanıyoruz.
   const primaryPrice = prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
   const currencySymbol = prices.currency_symbol || prices.currency || "$";
-  const description = generateDescription(city, primaryPrice, currencySymbol);
+  const description = generateDescription(city, primaryPrice, currencySymbol, country);
   const comparisons = await getComparisonData(city, country);
   console.log("Comparisons:", comparisons);
+
+  const translatedTitle = translate(country, 'title', {
+    city: city.charAt(0).toUpperCase() + city.slice(1),
+    country: country.toUpperCase(),
+  });
+
+  const translatedQuestion = translate(country, 'question', {
+    city: city.charAt(0).toUpperCase() + city.slice(1),
+  });
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -41,7 +49,7 @@ export default async function FuelPage({ params }: { params: Promise<{ country: 
       'mainEntity': [
         {
           '@type': 'Question',
-          'name': `How much does it cost to drive 1km in ${city}?`,
+          'name': translatedQuestion,
           'acceptedAnswer': { '@type': 'Answer', 'text': description }
         }
       ]
@@ -52,19 +60,27 @@ export default async function FuelPage({ params }: { params: Promise<{ country: 
     <div className="max-w-4xl mx-auto px-6 py-20 text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
-      <h1 className="text-5xl font-semibold tracking-[-2.4px] mb-8 text-white">Current Fuel Prices in {city.toUpperCase()}, {country.toUpperCase()} - Guide</h1>
+      <h1 className="text-5xl font-semibold tracking-[-2.4px] mb-8 text-white">
+        {translatedTitle}
+      </h1>
       
       <p className="text-lg text-gray-400 mb-10">{description}</p>
 
-      {/* Calculator bileşenine tüm fiyatları gönderiyoruz */}
-      <Calculator initialPrices={prices} />
+      {/* Calculator bileşenine tüm fiyatları ve ülke kodunu gönderiyoruz */}
+      <Calculator initialPrices={prices} countryCode={country} />
 
-      <h2 className="text-2xl font-semibold mt-12 mb-6 text-white">Price Comparisons</h2>
+      <h2 className="text-2xl font-semibold mt-12 mb-6 text-white">
+        {translate(country, 'priceComparisons')}
+      </h2>
       <table className="w-full text-left bg-gray-800 border-gray-700 rounded-lg overflow-hidden">
         <thead className="bg-gray-700">
           <tr>
-            <th className="p-4 text-white">Location</th>
-            <th className="p-4 text-white">Price ({currencySymbol})</th>
+            <th className="p-4 text-white">
+              {translate(country, 'location')}
+            </th>
+            <th className="p-4 text-white">
+              {translate(country, 'price')} ({currencySymbol})
+            </th>
           </tr>
         </thead>
         <tbody>
