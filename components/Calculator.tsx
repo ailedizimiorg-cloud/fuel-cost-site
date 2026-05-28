@@ -20,6 +20,20 @@ const fuelTypeKeys: (keyof FuelPrices)[] = [
   "electric_price"
 ];
 
+const DEFAULT_CONSUMPTIONS: { [key: string]: number } = {
+  gasoline_price: 8.0,
+  diesel_price: 6.0,
+  lpg_price: 10.0,
+  electric_price: 18.0
+};
+
+const CO2_EMISSIONS: { [key: string]: number } = {
+  gasoline_price: 2.31, // kg CO2 per Liter
+  diesel_price: 2.68,   // kg CO2 per Liter
+  lpg_price: 1.51,      // kg CO2 per Liter
+  electric_price: 0.40  // kg CO2 per kWh (standard grid)
+};
+
 export default function Calculator({ initialPrices, countryCode, lang }: CalculatorProps) {
   const currentLang = lang || countryCode;
   // Find the first available fuel type
@@ -48,6 +62,51 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
   const priceNum = parseFloat(price) || 0;
   const consNum = parseFloat(consumption) || 0;
   const distanceNum = parseFloat(monthlyDistance) || 0;
+
+  const getConsumptionForFuel = (key: string) => {
+    if (key === fuelType) {
+      return parseFloat(consumption) || 0;
+    }
+    return DEFAULT_CONSUMPTIONS[key] || 0;
+  };
+
+  const availableFuels = fuelTypeKeys.filter(key => {
+    const val = initialPrices[key];
+    return val !== null && val !== undefined && typeof val === "number" && val > 0;
+  }).map(key => {
+    const priceVal = initialPrices[key] as number;
+    const consVal = getConsumptionForFuel(key);
+    const cost = (priceVal * consVal / 100) * distanceNum;
+    const co2 = (CO2_EMISSIONS[key] || 0) * (consVal / 100) * distanceNum;
+    return {
+      key,
+      price: priceVal,
+      consumption: consVal,
+      cost,
+      co2
+    };
+  });
+
+  const minCost = availableFuels.length > 0 ? Math.min(...availableFuels.map(f => f.cost)) : 0;
+  const maxCost = availableFuels.length > 0 ? Math.max(...availableFuels.map(f => f.cost)) : 0;
+  const minCo2 = availableFuels.length > 0 ? Math.min(...availableFuels.map(f => f.co2)) : 0;
+  const maxCo2 = availableFuels.length > 0 ? Math.max(...availableFuels.map(f => f.co2)) : 0;
+
+  const fuelsWithScore = availableFuels.map(fuel => {
+    const costDiff = maxCost - minCost;
+    const costScore = costDiff === 0 ? 1 : (maxCost - fuel.cost) / costDiff;
+
+    const co2Diff = maxCo2 - minCo2;
+    const co2Score = co2Diff === 0 ? 1 : (maxCo2 - fuel.co2) / co2Diff;
+
+    const combinedScore = (costScore * 0.5) + (co2Score * 0.5);
+    const leafCount = Math.round(1 + combinedScore * 4);
+
+    return {
+      ...fuel,
+      leafCount
+    };
+  });
 
   const costPerKm = (priceNum * consNum) / 100;
   const periodCost = costPerKm * distanceNum;
@@ -205,6 +264,97 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
           </CardContent>
         </Card>
       </div>
+
+      {/* Dynamic Eco-Comparison Table */}
+      {fuelsWithScore.length > 0 && (
+        <div className="md:col-span-12 mt-4">
+          <div className="bg-gray-900/40 border border-gray-800/80 rounded-xl p-6 shadow-lg">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-white tracking-tight">
+                  {translate(currentLang, 'comparisonTable')}
+                </h3>
+                <p className="text-sm text-gray-400 mt-1">
+                  {translate(currentLang, 'forDistance', { distance: monthlyDistance })}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 bg-green-500/10 text-green-400 px-3 py-1.5 rounded-lg border border-green-500/20 text-xs font-semibold">
+                <span>🍃</span>
+                <span>
+                  {currentLang === 'tr'
+                    ? 'En Ucuz & En Doğa Dostu Yakıt En Fazla Yaprağı Alır'
+                    : 'Cheapest & Eco-friendliest Fuel Gets Most Leaves'}
+                </span>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-gray-800 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="py-3 px-4">
+                      {currentLang === 'tr' ? 'Yakıt Türü' : 'Fuel Type'}
+                    </th>
+                    <th className="py-3 px-4">
+                      {translate(currentLang, 'price')}
+                    </th>
+                    <th className="py-3 px-4">
+                      {currentLang === 'tr' ? 'Tüketim' : 'Consumption'}
+                    </th>
+                    <th className="py-3 px-4">
+                      {currentLang === 'tr' ? 'Maliyet' : 'Cost'}
+                    </th>
+                    <th className="py-3 px-4">
+                      {translate(currentLang, 'co2Emission')}
+                    </th>
+                    <th className="py-3 px-4 text-right">
+                      {translate(currentLang, 'ecoScore')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-800/50">
+                  {fuelsWithScore.map((fuel) => {
+                    const isSelected = fuelType === fuel.key;
+                    const leaves = Array(fuel.leafCount).fill("🍃").join(" ");
+                    return (
+                      <tr
+                        key={fuel.key}
+                        className={`text-sm transition-colors ${
+                          isSelected ? "bg-white/5 font-medium text-white" : "text-gray-300 hover:bg-gray-900/20"
+                        }`}
+                      >
+                        <td className="py-4 px-4 font-semibold text-white flex items-center gap-2">
+                          {translate(currentLang, `fuelTypes.${fuel.key}`)}
+                          {isSelected && (
+                            <span className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                              {currentLang === 'tr' ? 'Aktif' : 'Active'}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-4 px-4 font-mono">
+                          {currencySymbol}{fuel.price.toFixed(3)}
+                        </td>
+                        <td className="py-4 px-4">
+                          {fuel.consumption.toFixed(1)} {fuel.key === "electric_price" ? "kWh/100km" : "L/100km"}
+                        </td>
+                        <td className="py-4 px-4 font-semibold font-mono text-white">
+                          {currencySymbol}{fuel.cost.toFixed(2)}
+                        </td>
+                        <td className="py-4 px-4 font-mono">
+                          {fuel.co2.toFixed(1)} kg CO₂
+                        </td>
+                        <td className="py-4 px-4 text-right font-bold text-green-400 select-none tracking-widest text-lg">
+                          {leaves}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
