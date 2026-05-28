@@ -1,5 +1,6 @@
 import { createAdminClient } from './supabaseClient';
 import { translate } from './i18n';
+import { getCountryCurrency } from './currencies';
 
 // lib/seo-utils.ts
 export function generateDescription(
@@ -109,25 +110,34 @@ export async function getComparisonData(
   const finalCities = uniqueCountryCities.slice(0, 5);
 
   return finalCities.map(item => {
-    const origPrice = parseFloat(item.gasoline_price);
-    const origCurrencyCode = item.currency_code || 'USD';
-    const origCurrencySymbol = item.currency_symbol || '$';
+    const storedPrice = parseFloat(item.gasoline_price);
+    const storedCurrencyCode = item.currency_code || 'USD';
+    
+    // Resolve correct country currency
+    const { code: localCode, symbol: localSymbol } = getCountryCurrency(item.country_code);
 
+    // Convert stored price (usually USD) to its actual local price if needed
+    let localPrice = storedPrice;
+    if (storedCurrencyCode !== localCode && rates[storedCurrencyCode] && rates[localCode]) {
+      localPrice = (storedPrice / rates[storedCurrencyCode]) * rates[localCode];
+    }
+
+    // Now calculate converted price in the target currency (current active city's currency)
     let convertedPrice: number | null = null;
     if (
       targetCurrencyCode && 
-      targetCurrencyCode !== origCurrencyCode && 
-      rates[origCurrencyCode] && 
+      targetCurrencyCode !== localCode && 
+      rates[localCode] && 
       rates[targetCurrencyCode]
     ) {
-      const usdPrice = origPrice / rates[origCurrencyCode];
+      const usdPrice = localPrice / rates[localCode];
       convertedPrice = usdPrice * rates[targetCurrencyCode];
     }
 
     return {
       city: `${item.name} (${item.country_code})`,
-      price: origPrice,
-      currencySymbol: origCurrencySymbol,
+      price: localPrice,
+      currencySymbol: localSymbol,
       convertedPrice: convertedPrice,
       targetCurrencySymbol: targetCurrencySymbol || '$'
     };
