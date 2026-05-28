@@ -133,12 +133,12 @@ Germany,DE,1.85
 United States,US,0.95"""
         elif fuel_type == "diesel_prices":
             return """Country,code,Diesel prices
-Turkey,TR,1.25
+Turkey,TR,1.41
 Germany,DE,1.75
 United States,US,1.05"""
         elif fuel_type == "lpg_prices":
             return """Country,code,LPG prices
-Turkey,TR,0.72
+Turkey,TR,0.71
 Germany,DE,0.98
 United States,US,0.65"""
         return None
