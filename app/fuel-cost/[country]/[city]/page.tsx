@@ -3,8 +3,8 @@ import { getFuelPrices, generateDescription, getComparisonData } from "@/lib/fue
 import Calculator from "@/components/Calculator";
 import { notFound } from 'next/navigation';
 
-export default async function FuelPage({ params }: { params: { country: string; city: string } }) {
-  const { country, city } = params;
+export default async function FuelPage({ params }: { params: Promise<{ country: string; city: string }> }) {
+  const { country, city } = await params;
   
   // URL'den gelen ülke adının 2 harfli ISO kodu olduğunu varsayıyoruz (örn: "tr", "us")
   // Bu kod, veritabanı sorgusu için doğrudan kullanılacak.
