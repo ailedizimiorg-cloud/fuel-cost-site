@@ -31,6 +31,9 @@ export const translations: { [key: string]: any } = {
     costPerKm: "Cost per KM",
     totalCost: "Total Cost ({distance} km)",
     question: "How much does it cost to drive 1km in {city}?",
+    searchTitle: "Search Fuel Prices by City",
+    searchPlaceholder: "Type at least 2 characters to search...",
+    searchNoResults: "No cities found.",
     fuelTypes: {
       gasoline_price: "Gasoline",
       diesel_price: "Diesel",
@@ -64,6 +67,9 @@ export const translations: { [key: string]: any } = {
     costPerKm: "KM başına maliyet",
     totalCost: "Toplam Maliyet ({distance} km)",
     question: "{city} şehrinde 1 km gitmenin maliyeti nedir?",
+    searchTitle: "Şehre Göre Akaryakıt Fiyatı Ara",
+    searchPlaceholder: "Aramak için en az 2 karakter yazın...",
+    searchNoResults: "Şehir bulunamadı.",
     fuelTypes: {
       gasoline_price: "Benzin",
       diesel_price: "Motorin",
@@ -97,6 +103,9 @@ export const translations: { [key: string]: any } = {
     costPerKm: "Kosten pro KM",
     totalCost: "Gesamtkosten ({distance} km)",
     question: "Wie viel kostet es, 1 km in {city} zu fahren?",
+    searchTitle: "Kraftstoffpreise nach Stadt suchen",
+    searchPlaceholder: "Mindestens 2 Zeichen eingeben, um zu suchen...",
+    searchNoResults: "Keine Städte gefunden.",
     fuelTypes: {
       gasoline_price: "Benzin",
       diesel_price: "Diesel",
@@ -130,6 +139,9 @@ export const translations: { [key: string]: any } = {
     costPerKm: "Coût par KM",
     totalCost: "Coût Total ({distance} km)",
     question: "Combien coûte un trajet de 1 km à {city} ?",
+    searchTitle: "Rechercher les prix des carburants par ville",
+    searchPlaceholder: "Saisissez au moins 2 caractères pour rechercher...",
+    searchNoResults: "Aucune ville trouvée.",
     fuelTypes: {
       gasoline_price: "Essence",
       diesel_price: "Gazole",
@@ -163,6 +175,9 @@ export const translations: { [key: string]: any } = {
     costPerKm: "Coste por KM",
     totalCost: "Coste Total ({distance} km)",
     question: "¿Cuánto cuesta conducir 1 km en {city}?",
+    searchTitle: "Buscar precios de combustible por ciudad",
+    searchPlaceholder: "Escriba al menos 2 caracteres para buscar...",
+    searchNoResults: "No se encontraron ciudades.",
     fuelTypes: {
       gasoline_price: "Gasolina",
       diesel_price: "Diésel",
@@ -196,6 +211,9 @@ export const translations: { [key: string]: any } = {
     costPerKm: "Costo per KM",
     totalCost: "Costo Totale ({distance} km)",
     question: "Quanto costa percorrere 1 km a {city}?",
+    searchTitle: "Cerca i prezzi del carburante per città",
+    searchPlaceholder: "Digita almeno 2 caratteri per cercare...",
+    searchNoResults: "Nessuna città trovata.",
     fuelTypes: {
       gasoline_price: "Benzina",
       diesel_price: "Diesel",

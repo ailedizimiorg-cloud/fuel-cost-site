@@ -2,6 +2,7 @@
 import { getFuelPrices, generateDescription, getComparisonData } from "@/lib/fuel-api";
 import Calculator from "@/components/Calculator";
 import LanguageSelector from "@/components/LanguageSelector";
+import CitySearch from "@/components/CitySearch";
 import { notFound } from 'next/navigation';
 import { translate, getLanguage } from "@/lib/i18n";
 import { Metadata } from "next";
@@ -120,8 +121,9 @@ export default async function FuelPage({
     <div className="max-w-4xl mx-auto px-6 py-20 text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
-      {/* Dil Değiştirici */}
-      <div className="mb-6 flex justify-end">
+      {/* Üst Kısım: Dil Seçici ve Şehir Arama */}
+      <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-gray-800 pb-6">
+        <CitySearch lang={currentLang} className="w-full md:max-w-xs" />
         <LanguageSelector currentLang={currentLang} />
       </div>
 
