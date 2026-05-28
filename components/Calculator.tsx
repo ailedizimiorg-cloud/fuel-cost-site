@@ -506,6 +506,35 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
   const translatedUnitLabel = isElectric ? "kWh" : (isUS ? (currentLang === "tr" ? "Galon" : "Gallon") : translate(currentLang, `units.Liter`));
 
+  const outputStyles = {
+    electric_price: {
+      container: "bg-emerald-50/60 border-emerald-200 text-emerald-900 shadow-sm",
+      label: "text-emerald-700",
+      value: "text-emerald-950",
+      secondary: "text-emerald-900/80"
+    },
+    lpg_price: {
+      container: "bg-[#f0fdf4]/60 border-emerald-200/70 text-emerald-800 shadow-sm",
+      label: "text-emerald-700",
+      value: "text-emerald-900",
+      secondary: "text-emerald-800/80"
+    },
+    gasoline_price: {
+      container: "bg-[#fdf8f2] border-[#d5bda5]/40 text-[#6c4e31] shadow-sm",
+      label: "text-[#96714c]",
+      value: "text-[#4e3620]",
+      secondary: "text-[#6c4e31]/80"
+    },
+    diesel_price: {
+      container: "bg-[#f7ece1] border-[#c0a080]/40 text-[#543a21] shadow-sm",
+      label: "text-[#7c5b3c]",
+      value: "text-[#3e2610]",
+      secondary: "text-[#543a21]/80"
+    }
+  };
+
+  const currentOutputStyle = outputStyles[fuelType as keyof typeof outputStyles] || outputStyles.gasoline_price;
+
   const calculateDistanceBetweenCoordinates = (
     lat1: number | null | undefined,
     lng1: number | null | undefined,
@@ -1038,22 +1067,22 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
               )}
 
               {/* Result Outputs */}
-              <div className="pt-4 border-t border-[#e7e5e4] space-y-4">
+              <div className={`p-4 border rounded-xl space-y-4 ${currentOutputStyle.container}`}>
                 {mode === "simple" ? (
                   <>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
+                      <p className={`text-xs uppercase tracking-wider font-semibold ${currentOutputStyle.label}`}>
                         {isImperial ? (currentLang === "tr" ? "Mil başına maliyet" : "Cost per Mile") : translate(currentLang, "costPerKm")}
                       </p>
-                      <div className="text-3xl font-bold text-[#1c1917] tracking-tight mt-0.5 font-mono">
+                      <div className={`text-3xl font-bold tracking-tight mt-0.5 font-mono ${currentOutputStyle.value}`}>
                         {currencySymbol}{costPerUnitDistance.toFixed(3)}
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
+                      <p className={`text-xs uppercase tracking-wider font-semibold ${currentOutputStyle.label}`}>
                         {translate(currentLang, "totalCost", { distance: `${monthlyDistance} ${isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"}` })}
                       </p>
-                      <div className="text-xl font-semibold text-[#44403c] mt-0.5 font-mono">
+                      <div className={`text-xl font-bold mt-0.5 font-mono ${currentOutputStyle.value}`}>
                         {currencySymbol}{periodCost.toFixed(2)}
                       </div>
                     </div>
@@ -1062,35 +1091,35 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   // Route Mode Totals
                   <>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
+                      <p className={`text-xs uppercase tracking-wider font-semibold ${currentOutputStyle.label}`}>
                         {isImperial ? (currentLang === "tr" ? "Toplam Rota Mesafesi (mil)" : "Total Route Distance (miles)") : translate(currentLang, "totalDistance")}
                       </p>
-                      <div className="text-3xl font-bold text-[#1c1917] tracking-tight mt-0.5 font-mono">
+                      <div className={`text-3xl font-bold tracking-tight mt-0.5 font-mono ${currentOutputStyle.value}`}>
                         {totalRouteDistance.toLocaleString()} {isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"}
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
+                      <p className={`text-xs uppercase tracking-wider font-semibold ${currentOutputStyle.label}`}>
                         {translate(currentLang, "routeCostSummary")}
                       </p>
-                      <div className="text-2xl font-bold text-emerald-700 mt-0.5 font-mono">
+                      <div className={`text-2xl font-bold mt-0.5 font-mono ${currentOutputStyle.value}`}>
                         {currencySymbol}{periodCost.toFixed(2)}
                       </div>
                     </div>
 
                     {/* Breakdown of stops if any exist */}
                     {stops.length > 0 && (
-                      <div className="pt-4 border-t border-[#e7e5e4]/80 space-y-2">
-                        <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold mb-1">
+                      <div className={`pt-4 border-t space-y-2 border-dashed ${fuelType === "electric_price" || fuelType === "lpg_price" ? "border-emerald-300" : "border-[#c0a080]"}`}>
+                        <p className={`text-xs uppercase tracking-wider font-semibold mb-1 ${currentOutputStyle.label}`}>
                           Leg Costs:
                         </p>
                         <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1 font-mono text-xs">
                           {stops.map((stop, idx) => {
                             const leg = calculateLegDetails(fuelType, idx);
                             return (
-                              <div key={stop.id} className="flex justify-between text-[#57534e]">
-                                <span>↳ {stop.name} ({leg.distance} {isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"})</span>
-                                <span className="text-[#44403c] font-semibold">
+                              <div key={stop.id} className="flex justify-between">
+                                <span className={currentOutputStyle.secondary}>↳ {stop.name} ({leg.distance} {isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"})</span>
+                                <span className={`font-semibold ${currentOutputStyle.value}`}>
                                   {currencySymbol}{leg.cost.toFixed(2)}
                                 </span>
                               </div>
