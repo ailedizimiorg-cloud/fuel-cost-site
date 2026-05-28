@@ -82,6 +82,20 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
   const [price, setPrice] = useState("");
   const [consumption, setConsumption] = useState("8.0");
   const [monthlyDistance, setMonthlyDistance] = useState("1000");
+  const [electricChargeType, setElectricChargeType] = useState<"home" | "ac" | "dc">("home");
+
+  const getFuelTypeLabel = (key: string) => {
+    if (key === "electric_price_home") {
+      return currentLang === "tr" ? "Elektrik (Evde Şarj) 🏠" : "Electricity (Home Charging) 🏠";
+    }
+    if (key === "electric_price_ac") {
+      return currentLang === "tr" ? "Elektrik (Hızlı Şarj AC) ⚡" : "Electricity (AC Fast Charging) ⚡";
+    }
+    if (key === "electric_price_dc") {
+      return currentLang === "tr" ? "Elektrik (Hızlı Şarj DC) 🔋" : "Electricity (DC Fast Charging) 🔋";
+    }
+    return translate(currentLang, `fuelTypes.${key}`);
+  };
 
   // Route Mode States
   const [stops, setStops] = useState<RouteStop[]>([]);
@@ -149,7 +163,12 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
     
     // Convert price if US imperial
     let displayPrice = newPrice;
-    if (isUS && fuelType !== "electric_price") {
+    if (fuelType === "electric_price") {
+      let multiplier = 1.0;
+      if (electricChargeType === "ac") multiplier = 3.7;
+      else if (electricChargeType === "dc") multiplier = 4.5;
+      displayPrice = newPrice * multiplier;
+    } else if (isUS) {
       displayPrice = newPrice * 3.78541; // Per gallon
     }
     setPrice(displayPrice.toFixed(3));
@@ -172,7 +191,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
         setConsumption("8.0"); // 8 L/100km
       }
     }
-  }, [fuelType, initialPrices, isUS, isImperial]);
+  }, [fuelType, initialPrices, isUS, isImperial, electricChargeType]);
 
   const priceNum = parseFloat(price) || 0;
   const consNum = parseFloat(consumption) || 0;
@@ -209,7 +228,14 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
     const stopCurrencyCode = isStart ? initialPrices.currency_code : (stops[stopIndex].prices ? stops[stopIndex].prices.currency_code : null);
     
     // Fallback to start prices if stop is missing values
-    const finalPriceRaw = (stopPrice !== null && stopPrice !== undefined && stopPrice > 0) ? stopPrice : (initialPrices[fuelKey] as number || 0);
+    const finalPriceRawBase = (stopPrice !== null && stopPrice !== undefined && stopPrice > 0) ? stopPrice : (initialPrices[fuelKey] as number || 0);
+    let finalPriceRaw = finalPriceRawBase;
+    if (fuelKey === "electric_price") {
+      let multiplier = 1.0;
+      if (electricChargeType === "ac") multiplier = 3.7;
+      else if (electricChargeType === "dc") multiplier = 4.5;
+      finalPriceRaw = finalPriceRawBase * multiplier;
+    }
     const finalCurrencyCode = (stopPrice !== null && stopPrice !== undefined && stopPrice > 0) ? stopCurrencyCode : (initialPrices.currency_code || "USD");
 
     const convertedPricePerLiter = convertPrice(finalPriceRaw, finalCurrencyCode);
@@ -284,33 +310,80 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
   };
 
   // Available fuel types calculations
-  const availableFuels = fuelTypeKeys.filter(key => {
+  const availableFuels: any[] = [];
+  
+  fuelTypeKeys.forEach(key => {
     const val = initialPrices[key];
-    return val !== null && val !== undefined && typeof val === "number" && val > 0;
-  }).map(key => {
-    const priceVal = initialPrices[key] as number;
-    const consVal = getConsumptionForFuel(key);
+    if (val === null || val === undefined || typeof val !== "number" || val <= 0) {
+      return;
+    }
     
-    let cost = 0;
-    let co2 = 0;
-    let distanceVal = distanceNum;
-
-    if (mode === "route") {
-      const totals = getRouteTotalForFuel(key);
-      cost = totals.cost;
-      co2 = totals.co2;
-      distanceVal = totals.distance;
-    } else {
-      if (key === "electric_price") {
-        if (isImperial) {
-          const kWhConsumed = consVal > 0 ? (distanceNum / consVal) : 0;
-          cost = priceVal * kWhConsumed;
-          co2 = kWhConsumed * CO2_EMISSIONS[key];
+    if (key === "electric_price") {
+      const subTypes = [
+        { subKey: "electric_price_home", mult: 1.0, labelKey: "electricity_home" },
+        { subKey: "electric_price_ac", mult: 3.7, labelKey: "electricity_ac" },
+        { subKey: "electric_price_dc", mult: 4.5, labelKey: "electricity_dc" }
+      ];
+      
+      subTypes.forEach(sub => {
+        const priceVal = val * sub.mult;
+        const consVal = getConsumptionForFuel("electric_price");
+        
+        let cost = 0;
+        let co2 = 0;
+        let distanceVal = distanceNum;
+        
+        if (mode === "route") {
+          let totalCost = 0;
+          let totalCo2 = 0;
+          let totalDistance = 0;
+          
+          stops.forEach((_, index) => {
+            const leg = calculateLegDetails("electric_price", index);
+            totalCost += leg.cost * sub.mult;
+            totalCo2 += leg.co2;
+            totalDistance += leg.distance;
+          });
+          
+          cost = totalCost;
+          co2 = totalCo2;
+          distanceVal = totalDistance;
         } else {
-          const kWhConsumed = (consVal / 100) * distanceNum;
-          cost = priceVal * kWhConsumed;
-          co2 = kWhConsumed * CO2_EMISSIONS[key];
+          if (isImperial) {
+            const kWhConsumed = consVal > 0 ? (distanceNum / consVal) : 0;
+            cost = priceVal * kWhConsumed;
+            co2 = kWhConsumed * CO2_EMISSIONS["electric_price"];
+          } else {
+            const kWhConsumed = (consVal / 100) * distanceNum;
+            cost = priceVal * kWhConsumed;
+            co2 = kWhConsumed * CO2_EMISSIONS["electric_price"];
+          }
         }
+        
+        availableFuels.push({
+          key: sub.subKey,
+          baseKey: "electric_price",
+          labelKey: sub.labelKey,
+          price: priceVal,
+          consumption: consVal,
+          cost,
+          co2,
+          distance: distanceVal
+        });
+      });
+    } else {
+      const priceVal = val;
+      const consVal = getConsumptionForFuel(key);
+      
+      let cost = 0;
+      let co2 = 0;
+      let distanceVal = distanceNum;
+      
+      if (mode === "route") {
+        const totals = getRouteTotalForFuel(key);
+        cost = totals.cost;
+        co2 = totals.co2;
+        distanceVal = totals.distance;
       } else {
         if (isUS) {
           const pricePerGallon = priceVal * 3.78541;
@@ -328,16 +401,18 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
           co2 = litersConsumed * CO2_EMISSIONS[key];
         }
       }
+      
+      availableFuels.push({
+        key,
+        baseKey: key,
+        labelKey: key,
+        price: isUS ? priceVal * 3.78541 : priceVal,
+        consumption: consVal,
+        cost,
+        co2,
+        distance: distanceVal
+      });
     }
-
-    return {
-      key,
-      price: isUS && key !== "electric_price" ? priceVal * 3.78541 : priceVal,
-      consumption: consVal,
-      cost,
-      co2,
-      distance: distanceVal
-    };
   });
 
   const minCost = availableFuels.length > 0 ? Math.min(...availableFuels.map(f => f.cost)) : 0;
@@ -348,34 +423,26 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
   // Calculate dynamically sorted and scored fuels by CO2/Eco
   const sortedAndScoredFuels = [...availableFuels].sort((a, b) => a.co2 - b.co2); // Sort lowest CO2 first (cleanest)
 
-  const fuelsWithScore = sortedAndScoredFuels.map((fuel, index) => {
-    // With 4 items (at most):
-    // Index 0: Lowest CO2 (Cleanest) -> Bright Green
-    // Index 1: Second Lowest -> Soft Green
-    // Index 2: Third Lowest -> Soft Light Brown (Tan)
-    // Index 3: Highest CO2 (Dirtiest) -> Darker Warm Brown
-
+  const fuelsWithScore = sortedAndScoredFuels.map((fuel) => {
     let bgStyle = "";
     let borderStyle = "";
     let textStyle = "";
 
-    if (index === 0) {
-      // 1st Level: Bright Green (cleanest)
-      bgStyle = "bg-emerald-50 hover:bg-emerald-100/70";
-      borderStyle = "border-emerald-200/80";
-      textStyle = "text-emerald-900";
-    } else if (index === 1) {
-      // 2nd Level: Soft Silik Green
-      bgStyle = "bg-[#f0fdf4]/50 hover:bg-[#f0fdf4]/80";
-      borderStyle = "border-[#dcfce7]/60";
-      textStyle = "text-emerald-800";
-    } else if (index === 2) {
-      // 3rd Level: Soft Light Brown / Tan
+    if (fuel.baseKey === "electric_price") {
+      if (fuel.key === "electric_price_home") {
+        bgStyle = "bg-emerald-50 hover:bg-emerald-100/70";
+        borderStyle = "border-emerald-200/80";
+        textStyle = "text-emerald-900";
+      } else {
+        bgStyle = "bg-[#f0fdf4]/50 hover:bg-[#f0fdf4]/80";
+        borderStyle = "border-[#dcfce7]/60";
+        textStyle = "text-emerald-800";
+      }
+    } else if (fuel.baseKey === "lpg_price") {
       bgStyle = "bg-[#fdf8f2] hover:bg-[#faf1e6]";
       borderStyle = "border-[#f5e6d3]";
       textStyle = "text-[#6c4e31]";
     } else {
-      // 4th Level: Darker Warm Brown (dirtiest)
       bgStyle = "bg-[#f7ece1] hover:bg-[#f3dfce]";
       borderStyle = "border-[#e9cfb9]";
       textStyle = "text-[#543a21]";
@@ -804,6 +871,49 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                     />
                   </div>
 
+                  {isElectric && (
+                    <div className="space-y-2 pt-1">
+                      <Label className="text-xs text-[#78716c] font-semibold uppercase tracking-wider">
+                        {currentLang === "tr" ? "Şarj Noktası Tipi" : "Charging Location Type"}
+                      </Label>
+                      <div className="grid grid-cols-3 gap-2 p-1 bg-[#f5f4f0] border border-[#e7e5e4] rounded-xl shadow-sm">
+                        <button
+                          type="button"
+                          onClick={() => setElectricChargeType("home")}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                            electricChargeType === "home"
+                              ? "bg-white text-[#1c1917] shadow-sm border border-[#e7e5e4]/60"
+                              : "text-[#78716c] hover:text-[#1c1917]"
+                          }`}
+                        >
+                          {currentLang === "tr" ? "🏠 Evde" : "🏠 Home"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setElectricChargeType("ac")}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                            electricChargeType === "ac"
+                              ? "bg-white text-[#1c1917] shadow-sm border border-[#e7e5e4]/60"
+                              : "text-[#78716c] hover:text-[#1c1917]"
+                          }`}
+                        >
+                          {currentLang === "tr" ? "⚡ Hızlı AC" : "⚡ Fast AC"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setElectricChargeType("dc")}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                            electricChargeType === "dc"
+                              ? "bg-white text-[#1c1917] shadow-sm border border-[#e7e5e4]/60"
+                              : "text-[#78716c] hover:text-[#1c1917]"
+                          }`}
+                        >
+                          {currentLang === "tr" ? "🔋 Hızlı DC" : "🔋 Fast DC"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Consumption Input */}
                   <div className="space-y-2">
                     <Label className="text-sm text-[#78716c] font-semibold">
@@ -843,6 +953,49 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       {currencySymbol}{(initialPrices[fuelType] as number || 0).toFixed(3)}
                     </span>
                   </div>
+
+                  {isElectric && (
+                    <div className="space-y-2">
+                      <Label className="text-xs text-[#78716c] font-semibold uppercase tracking-wider">
+                        {currentLang === "tr" ? "Şarj Noktası Tipi" : "Charging Location Type"}
+                      </Label>
+                      <div className="grid grid-cols-3 gap-2 p-1 bg-[#f5f4f0] border border-[#e7e5e4] rounded-xl shadow-sm">
+                        <button
+                          type="button"
+                          onClick={() => setElectricChargeType("home")}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                            electricChargeType === "home"
+                              ? "bg-white text-[#1c1917] shadow-sm border border-[#e7e5e4]/60"
+                              : "text-[#78716c] hover:text-[#1c1917]"
+                          }`}
+                        >
+                          {currentLang === "tr" ? "🏠 Evde" : "🏠 Home"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setElectricChargeType("ac")}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                            electricChargeType === "ac"
+                              ? "bg-white text-[#1c1917] shadow-sm border border-[#e7e5e4]/60"
+                              : "text-[#78716c] hover:text-[#1c1917]"
+                          }`}
+                        >
+                          {currentLang === "tr" ? "⚡ Hızlı AC" : "⚡ Fast AC"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setElectricChargeType("dc")}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                            electricChargeType === "dc"
+                              ? "bg-white text-[#1c1917] shadow-sm border border-[#e7e5e4]/60"
+                              : "text-[#78716c] hover:text-[#1c1917]"
+                          }`}
+                        >
+                          {currentLang === "tr" ? "🔋 Hızlı DC" : "🔋 Fast DC"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Consumption Input in Route Mode */}
                   <div className="space-y-2">
@@ -980,7 +1133,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   </thead>
                   <tbody className="divide-y divide-[#e7e5e4]">
                     {fuelsWithScore.map((fuel) => {
-                      const isSelected = fuelType === fuel.key;
+                      const isSelected = fuelType === fuel.key || (fuelType === "electric_price" && fuel.baseKey === "electric_price" && fuel.key === `electric_price_${electricChargeType}`);
                       const leaves = Array(fuel.leafCount).fill("🍃").join(" ");
                       return (
                         <tr
@@ -990,7 +1143,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                           }`}
                         >
                           <td className="py-4 px-4 font-semibold flex items-center gap-2">
-                            {translate(currentLang, `fuelTypes.${fuel.key}`)}
+                            {getFuelTypeLabel(fuel.key)}
                             {isSelected && (
                               <span className="text-[10px] bg-white/90 text-[#1c1917] border border-stone-200/60 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
                                 {currentLang === "tr" ? "Aktif" : "Active"}
@@ -1001,7 +1154,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                             {currencySymbol}{fuel.price.toFixed(3)}
                           </td>
                           <td className="py-4 px-4 opacity-90">
-                            {fuel.consumption.toFixed(1)} {fuel.key === "electric_price" ? (isImperial ? "mi/kWh" : "kWh/100km") : (isUS ? "MPG" : (isGB ? "MPG (UK)" : "L/100km"))}
+                            {fuel.consumption.toFixed(1)} {fuel.baseKey === "electric_price" ? (isImperial ? "mi/kWh" : "kWh/100km") : (isUS ? "MPG" : (isGB ? "MPG (UK)" : "L/100km"))}
                           </td>
                           <td className="py-4 px-4 font-bold font-mono">
                             {currencySymbol}{fuel.cost.toFixed(2)}
