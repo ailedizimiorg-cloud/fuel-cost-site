@@ -33,7 +33,7 @@ export async function GET(request: Request) {
     // We search using the normalized English-equivalent query
     const { data, error } = await supabase
       .from('cities')
-      .select('name, slug, country_code')
+      .select('name, slug, country_code, lat, lng')
       .ilike('name', `%${normalizedQuery}%`)
       .limit(10);
 

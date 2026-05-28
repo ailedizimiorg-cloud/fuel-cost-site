@@ -20,6 +20,8 @@ interface RouteStop {
   country_code: string;
   distance: number; // Distance from the previous stop
   prices: FuelPrices | null;
+  lat?: number | null;
+  lng?: number | null;
 }
 
 type FuelTypeKey = "gasoline_price" | "diesel_price" | "lpg_price" | "electric_price";
@@ -312,19 +314,68 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
   const translatedUnitLabel = translate(currentLang, `units.${unitLabel}`);
 
+  const calculateDistanceBetweenCoordinates = (
+    lat1: number | null | undefined,
+    lng1: number | null | undefined,
+    lat2: number | null | undefined,
+    lng2: number | null | undefined
+  ): number => {
+    if (
+      lat1 === null || lat1 === undefined ||
+      lng1 === null || lng1 === undefined ||
+      lat2 === null || lat2 === undefined ||
+      lng2 === null || lng2 === undefined
+    ) {
+      return 150; // Fallback to 150 km if any coordinate is missing
+    }
+
+    const R = 6371; // Earth's radius in km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Straight-line distance in km
+
+    // Convert to estimated road distance (using standard 1.25 circuity routing factor)
+    return Math.round(d * 1.25);
+  };
+
   const addStopToRoute = async (city: any) => {
     setSearchLoading(true);
     try {
       const response = await fetch(`/api/cities/prices?country=${city.country_code}&city=${city.slug}`);
       const prices = await response.json();
       
+      // Determine the previous coordinates
+      let prevLat = initialPrices.lat;
+      let prevLng = initialPrices.lng;
+
+      if (stops.length > 0) {
+        const lastStop = stops[stops.length - 1];
+        prevLat = lastStop.lat ?? null;
+        prevLng = lastStop.lng ?? null;
+      }
+
+      // Calculate the real distance
+      const cityLat = city.lat !== null && city.lat !== undefined ? parseFloat(city.lat) : (prices.lat ?? null);
+      const cityLng = city.lng !== null && city.lng !== undefined ? parseFloat(city.lng) : (prices.lng ?? null);
+
+      const computedDistance = calculateDistanceBetweenCoordinates(prevLat, prevLng, cityLat, cityLng);
+
       const newStop: RouteStop = {
         id: Math.random().toString(36).substr(2, 9),
         name: city.name,
         slug: city.slug,
         country_code: city.country_code,
-        distance: 150, // default leg distance in km
-        prices: response.ok ? prices : null
+        distance: computedDistance,
+        prices: response.ok ? prices : null,
+        lat: cityLat,
+        lng: cityLng
       };
 
       setStops([...stops, newStop]);
