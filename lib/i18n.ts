@@ -1252,7 +1252,7 @@ export function translate(countryCode: string, key: string, placeholders: { [key
 
   let result = value;
   for (const placeholder in placeholders) {
-    result = result.replace(new RegExp(`{\${placeholder}}`, 'g'), String(placeholders[placeholder]));
+    result = result.replace(new RegExp(`{${placeholder}}`, 'g'), String(placeholders[placeholder]));
   }
   return result;
 }
