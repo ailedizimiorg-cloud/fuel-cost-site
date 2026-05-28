@@ -297,6 +297,27 @@ export function getLanguage(countryCodeOrLang: string): string {
   return countryToLanguage[code] || 'en';
 }
 
+export function getLanguageFromHeaders(acceptLanguage: string, vercelCountry: string): string | null {
+  if (vercelCountry) {
+    const code = vercelCountry.toUpperCase();
+    if (countryToLanguage[code]) {
+      return countryToLanguage[code];
+    }
+  }
+
+  if (acceptLanguage) {
+    const langs = acceptLanguage.split(',').map(l => l.split(';')[0].split('-')[0].trim().toLowerCase());
+    const supportedLangs = ['tr', 'de', 'fr', 'es', 'it'];
+    for (const l of langs) {
+      if (supportedLangs.includes(l)) {
+        return l;
+      }
+    }
+  }
+
+  return null;
+}
+
 export function translate(countryCode: string, key: string, placeholders: { [key: string]: string | number } = {}): string {
   const lang = getLanguage(countryCode);
   const dict = translations[lang] || translations['en'];

@@ -4,8 +4,9 @@ import Calculator from "@/components/Calculator";
 import LanguageSelector from "@/components/LanguageSelector";
 import CitySearch from "@/components/CitySearch";
 import { notFound } from 'next/navigation';
-import { translate, getLanguage } from "@/lib/i18n";
+import { translate, getLanguage, getLanguageFromHeaders } from "@/lib/i18n";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 
 export async function generateMetadata({ 
   params, 
@@ -24,7 +25,12 @@ export async function generateMetadata({
     };
   }
 
-  const currentLang = getLanguage(lang || country);
+  // Detect language from headers if no explicit lang param is present
+  const headerList = await headers();
+  const acceptLanguage = headerList.get('accept-language') || '';
+  const vercelCountry = headerList.get('x-vercel-ip-country') || '';
+  const detectedLang = getLanguageFromHeaders(acceptLanguage, vercelCountry);
+  const currentLang = lang || detectedLang || getLanguage(country);
   const primaryPrice = prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
   const currencySymbol = prices.currency_symbol || prices.currency || "$";
   const description = generateDescription(city, primaryPrice, currencySymbol, country);
@@ -81,8 +87,12 @@ export default async function FuelPage({
     notFound();
   }
   
-  // Belirlenen geçerli dili çözüyoruz (varsayılan ülke kodu, manuel ise lang)
-  const currentLang = getLanguage(lang || country);
+  // Belirlenen geçerli dili çözüyoruz (varsayılan ülke kodu, manuel ise lang veya header tespiti)
+  const headerList = await headers();
+  const acceptLanguage = headerList.get('accept-language') || '';
+  const vercelCountry = headerList.get('x-vercel-ip-country') || '';
+  const detectedLang = getLanguageFromHeaders(acceptLanguage, vercelCountry);
+  const currentLang = lang || detectedLang || getLanguage(country);
 
   // SEO için açıklama ve karşılaştırma verilerini oluşturuyoruz.
   const primaryPrice = prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
