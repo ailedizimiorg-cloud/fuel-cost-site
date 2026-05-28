@@ -33,7 +33,7 @@ export async function generateMetadata({
   const currentLang = lang || detectedLang || getLanguage(country);
   const primaryPrice = prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
   const currencySymbol = prices.currency_symbol || prices.currency || "$";
-  const description = generateDescription(city, primaryPrice, currencySymbol, country);
+  const description = generateDescription(city, primaryPrice, currencySymbol, country, currentLang);
 
   const translatedTitle = translate(currentLang, 'title', {
     city: city.charAt(0).toUpperCase() + city.slice(1),
@@ -97,7 +97,7 @@ export default async function FuelPage({
   // SEO için açıklama ve karşılaştırma verilerini oluşturuyoruz.
   const primaryPrice = prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
   const currencySymbol = prices.currency_symbol || prices.currency || "$";
-  const description = generateDescription(city, primaryPrice, currencySymbol, country);
+  const description = generateDescription(city, primaryPrice, currencySymbol, country, currentLang);
   const comparisons = await getComparisonData(
     city, 
     country, 

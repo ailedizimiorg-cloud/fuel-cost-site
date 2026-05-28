@@ -7,17 +7,20 @@ export function generateDescription(
   city: string,
   price: number,
   currency: string = '$',
-  countryCode: string = 'US'
+  countryCode: string = 'US',
+  lang?: string
 ): string {
+  const currentLang = lang || countryCode.toLowerCase();
+  
   const isUS = countryCode.toUpperCase() === 'US';
   const isGB = countryCode.toUpperCase() === 'GB';
   
-  if (isUS) {
+  if (isUS && (currentLang === 'en' || currentLang === 'us')) {
     const pricePerGallon = price * 3.78541;
     const consumption = 29.4; // MPG
     const costPerMile = (pricePerGallon / consumption).toFixed(3);
     return `In ${city.charAt(0).toUpperCase() + city.slice(1)}, the current price of gasoline is ${currency}${pricePerGallon.toFixed(2)} per gallon. For a standard car consuming ${consumption} MPG, driving 1 mile costs ${currency}${costPerMile}. This guide provides real-time updates and cost analysis for drivers in the region.`;
-  } else if (isGB) {
+  } else if (isGB && (currentLang === 'en' || currentLang === 'gb')) {
     const consumption = 35.3; // MPG (UK)
     const costPerMile = ((4.54609 / consumption) * price).toFixed(3);
     return `In ${city.charAt(0).toUpperCase() + city.slice(1)}, the current price of gasoline is ${currency}${price.toFixed(2)} per liter. For a standard car consuming ${consumption} MPG, driving 1 mile costs ${currency}${costPerMile}. This guide provides real-time updates and cost analysis for drivers in the region.`;
@@ -26,7 +29,7 @@ export function generateDescription(
   const consumption = 8.0; // Standard matches default metric gasoline (8.0 L/100km)
   const costPerKm = ((price * consumption) / 100).toFixed(3);
   
-  return translate(countryCode, 'description', {
+  return translate(currentLang, 'description', {
     city: city.charAt(0).toUpperCase() + city.slice(1),
     price: price.toFixed(2),
     currency,
