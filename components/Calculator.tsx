@@ -242,7 +242,42 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
   const minCo2 = availableFuels.length > 0 ? Math.min(...availableFuels.map(f => f.co2)) : 0;
   const maxCo2 = availableFuels.length > 0 ? Math.max(...availableFuels.map(f => f.co2)) : 0;
 
-  const fuelsWithScore = availableFuels.map(fuel => {
+  // Calculate dynamically sorted and scored fuels by CO2/Eco
+  const sortedAndScoredFuels = [...availableFuels].sort((a, b) => a.co2 - b.co2); // Sort lowest CO2 first (cleanest)
+
+  const fuelsWithScore = sortedAndScoredFuels.map((fuel, index) => {
+    // With 4 items (at most):
+    // Index 0: Lowest CO2 (Cleanest) -> Bright Green
+    // Index 1: Second Lowest -> Soft Green
+    // Index 2: Third Lowest -> Soft Light Brown (Tan)
+    // Index 3: Highest CO2 (Dirtiest) -> Darker Warm Brown
+
+    let bgStyle = "";
+    let borderStyle = "";
+    let textStyle = "";
+
+    if (index === 0) {
+      // 1st Level: Bright Green (cleanest)
+      bgStyle = "bg-emerald-50 hover:bg-emerald-100/70";
+      borderStyle = "border-emerald-200/80";
+      textStyle = "text-emerald-900";
+    } else if (index === 1) {
+      // 2nd Level: Soft Silik Green
+      bgStyle = "bg-[#f0fdf4]/50 hover:bg-[#f0fdf4]/80";
+      borderStyle = "border-[#dcfce7]/60";
+      textStyle = "text-emerald-800";
+    } else if (index === 2) {
+      // 3rd Level: Soft Light Brown / Tan
+      bgStyle = "bg-[#fdf8f2] hover:bg-[#faf1e6]";
+      borderStyle = "border-[#f5e6d3]";
+      textStyle = "text-[#6c4e31]";
+    } else {
+      // 4th Level: Darker Warm Brown (dirtiest)
+      bgStyle = "bg-[#f7ece1] hover:bg-[#f3dfce]";
+      borderStyle = "border-[#e9cfb9]";
+      textStyle = "text-[#543a21]";
+    }
+
     const costDiff = maxCost - minCost;
     const costScore = costDiff === 0 ? 1 : (maxCost - fuel.cost) / costDiff;
 
@@ -254,7 +289,10 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
     return {
       ...fuel,
-      leafCount
+      leafCount,
+      bgStyle,
+      borderStyle,
+      textStyle
     };
   });
 
@@ -742,31 +780,31 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       return (
                         <tr
                           key={fuel.key}
-                          className={`text-sm transition-colors ${
-                            isSelected ? "bg-[#f5f4f0] font-semibold text-[#1c1917]" : "text-[#44403c] hover:bg-[#faf9f6]"
+                          className={`text-sm transition-all duration-200 border-l-4 ${fuel.bgStyle} ${fuel.textStyle} ${
+                            isSelected ? "border-l-[#1c1917] font-bold" : "border-l-transparent"
                           }`}
                         >
-                          <td className="py-4 px-4 font-semibold text-[#1c1917] flex items-center gap-2">
+                          <td className="py-4 px-4 font-semibold flex items-center gap-2">
                             {translate(currentLang, `fuelTypes.${fuel.key}`)}
                             {isSelected && (
-                              <span className="text-[10px] bg-sky-50 text-sky-700 border border-sky-100 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                              <span className="text-[10px] bg-white/90 text-[#1c1917] border border-stone-200/60 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
                                 {currentLang === "tr" ? "Aktif" : "Active"}
                               </span>
                             )}
                           </td>
-                          <td className="py-4 px-4 font-mono text-[#57534e]">
+                          <td className="py-4 px-4 font-mono opacity-90">
                             {currencySymbol}{fuel.price.toFixed(3)}
                           </td>
-                          <td className="py-4 px-4 text-[#44403c]">
+                          <td className="py-4 px-4 opacity-90">
                             {fuel.consumption.toFixed(1)} {fuel.key === "electric_price" ? "kWh/100km" : "L/100km"}
                           </td>
-                          <td className="py-4 px-4 font-semibold font-mono text-[#1c1917]">
+                          <td className="py-4 px-4 font-bold font-mono">
                             {currencySymbol}{fuel.cost.toFixed(2)}
                           </td>
-                          <td className="py-4 px-4 font-mono text-[#57534e]">
+                          <td className="py-4 px-4 font-mono opacity-95">
                             {fuel.co2.toFixed(1)} kg CO₂
                           </td>
-                          <td className="py-4 px-4 text-right font-bold text-emerald-600 select-none tracking-widest text-lg">
+                          <td className="py-4 px-4 text-right font-bold select-none tracking-widest text-lg">
                             {leaves}
                           </td>
                         </tr>
