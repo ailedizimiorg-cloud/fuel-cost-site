@@ -33,11 +33,25 @@ const fuelTypeKeys: FuelTypeKey[] = [
   "electric_price"
 ];
 
-const DEFAULT_CONSUMPTIONS: { [key: string]: number } = {
+const DEFAULT_CONSUMPTIONS_METRIC: { [key: string]: number } = {
   gasoline_price: 8.0,
   diesel_price: 6.0,
   lpg_price: 10.0,
   electric_price: 18.0
+};
+
+const DEFAULT_CONSUMPTIONS_US: { [key: string]: number } = {
+  gasoline_price: 29.4,
+  diesel_price: 39.2,
+  lpg_price: 23.5,
+  electric_price: 3.5
+};
+
+const DEFAULT_CONSUMPTIONS_GB: { [key: string]: number } = {
+  gasoline_price: 35.3,
+  diesel_price: 47.1,
+  lpg_price: 28.2,
+  electric_price: 3.5
 };
 
 const CO2_EMISSIONS: { [key: string]: number } = {
@@ -50,6 +64,13 @@ const CO2_EMISSIONS: { [key: string]: number } = {
 export default function Calculator({ initialPrices, countryCode, lang }: CalculatorProps) {
   const currentLang = lang || countryCode;
   
+  const defaultIsImperial = countryCode.toUpperCase() === "US" || countryCode.toUpperCase() === "GB";
+  const [unitSystem, setUnitSystem] = useState<"metric" | "imperial">(defaultIsImperial ? "imperial" : "metric");
+
+  const isImperial = unitSystem === "imperial";
+  const isGB = countryCode.toUpperCase() === "GB" && isImperial;
+  const isUS = isImperial && !isGB;
+
   // Find the first available fuel type
   const defaultFuelType = fuelTypeKeys.find(key => {
     const val = initialPrices[key];
@@ -125,15 +146,33 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
   useEffect(() => {
     const newPrice = initialPrices[fuelType] as number || 0;
-    setPrice(newPrice.toString());
+    
+    // Convert price if US imperial
+    let displayPrice = newPrice;
+    if (isUS && fuelType !== "electric_price") {
+      displayPrice = newPrice * 3.78541; // Per gallon
+    }
+    setPrice(displayPrice.toFixed(3));
     
     // Set appropriate default consumption for electric vs fuel
     if (fuelType === "electric_price") {
-      setConsumption("18.0"); // 18 kWh/100km is typical for EVs
+      if (isImperial) {
+        setConsumption("3.5"); // 3.5 mi/kWh is typical for EVs
+      } else {
+        setConsumption("18.0"); // 18 kWh/100km
+      }
     } else {
-      setConsumption("8.0"); // 8 L/100km for regular cars
+      if (isImperial) {
+        if (isUS) {
+          setConsumption("29.4");
+        } else {
+          setConsumption("35.3");
+        }
+      } else {
+        setConsumption("8.0"); // 8 L/100km
+      }
     }
-  }, [fuelType, initialPrices]);
+  }, [fuelType, initialPrices, isUS, isImperial]);
 
   const priceNum = parseFloat(price) || 0;
   const consNum = parseFloat(consumption) || 0;
@@ -143,7 +182,10 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
     if (key === fuelType) {
       return parseFloat(consumption) || 0;
     }
-    return DEFAULT_CONSUMPTIONS[key] || 0;
+    const defaults = isGB 
+      ? DEFAULT_CONSUMPTIONS_GB 
+      : (isUS ? DEFAULT_CONSUMPTIONS_US : DEFAULT_CONSUMPTIONS_METRIC);
+    return defaults[key] || 0;
   };
 
   // Convert a price to the base currency
@@ -170,15 +212,49 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
     const finalPriceRaw = (stopPrice !== null && stopPrice !== undefined && stopPrice > 0) ? stopPrice : (initialPrices[fuelKey] as number || 0);
     const finalCurrencyCode = (stopPrice !== null && stopPrice !== undefined && stopPrice > 0) ? stopCurrencyCode : (initialPrices.currency_code || "USD");
 
-    const convertedPrice = convertPrice(finalPriceRaw, finalCurrencyCode);
+    const convertedPricePerLiter = convertPrice(finalPriceRaw, finalCurrencyCode);
     const legDistance = isStart ? 0 : stops[stopIndex].distance;
     const cons = getConsumptionForFuel(fuelKey);
-    const cost = (convertedPrice * cons / 100) * legDistance;
-    const co2 = (CO2_EMISSIONS[fuelKey] || 0) * (cons / 100) * legDistance;
+
+    let cost = 0;
+    let co2 = 0;
+
+    if (fuelKey === "electric_price") {
+      if (isImperial) {
+        const kWhConsumed = cons > 0 ? (legDistance / cons) : 0;
+        cost = convertedPricePerLiter * kWhConsumed;
+        co2 = kWhConsumed * CO2_EMISSIONS[fuelKey];
+      } else {
+        const kWhConsumed = (cons / 100) * legDistance;
+        cost = convertedPricePerLiter * kWhConsumed;
+        co2 = kWhConsumed * CO2_EMISSIONS[fuelKey];
+      }
+    } else {
+      if (isUS) {
+        const convertedPricePerGallon = convertedPricePerLiter * 3.78541;
+        const gallonsConsumed = cons > 0 ? (legDistance / cons) : 0;
+        cost = gallonsConsumed * convertedPricePerGallon;
+        co2 = (gallonsConsumed * 3.78541) * CO2_EMISSIONS[fuelKey];
+      } else if (isGB) {
+        const gallonsConsumed = cons > 0 ? (legDistance / cons) : 0;
+        const litersConsumed = gallonsConsumed * 4.54609;
+        cost = litersConsumed * convertedPricePerLiter;
+        co2 = litersConsumed * CO2_EMISSIONS[fuelKey];
+      } else {
+        const litersConsumed = (cons / 100) * legDistance;
+        cost = litersConsumed * convertedPricePerLiter;
+        co2 = litersConsumed * CO2_EMISSIONS[fuelKey];
+      }
+    }
+
+    let displayRawPrice = finalPriceRaw;
+    if (isUS && fuelKey !== "electric_price") {
+      displayRawPrice = finalPriceRaw * 3.78541;
+    }
 
     return {
-      price: convertedPrice,
-      rawPrice: finalPriceRaw,
+      price: isUS && fuelKey !== "electric_price" ? convertedPricePerLiter * 3.78541 : convertedPricePerLiter,
+      rawPrice: displayRawPrice,
       currencyCode: finalCurrencyCode,
       cost,
       co2,
@@ -225,13 +301,38 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
       co2 = totals.co2;
       distanceVal = totals.distance;
     } else {
-      cost = (priceVal * consVal / 100) * distanceNum;
-      co2 = (CO2_EMISSIONS[key] || 0) * (consVal / 100) * distanceNum;
+      if (key === "electric_price") {
+        if (isImperial) {
+          const kWhConsumed = consVal > 0 ? (distanceNum / consVal) : 0;
+          cost = priceVal * kWhConsumed;
+          co2 = kWhConsumed * CO2_EMISSIONS[key];
+        } else {
+          const kWhConsumed = (consVal / 100) * distanceNum;
+          cost = priceVal * kWhConsumed;
+          co2 = kWhConsumed * CO2_EMISSIONS[key];
+        }
+      } else {
+        if (isUS) {
+          const pricePerGallon = priceVal * 3.78541;
+          const gallonsConsumed = consVal > 0 ? (distanceNum / consVal) : 0;
+          cost = gallonsConsumed * pricePerGallon;
+          co2 = (gallonsConsumed * 3.78541) * CO2_EMISSIONS[key];
+        } else if (isGB) {
+          const gallonsConsumed = consVal > 0 ? (distanceNum / consVal) : 0;
+          const litersConsumed = gallonsConsumed * 4.54609;
+          cost = litersConsumed * priceVal;
+          co2 = litersConsumed * CO2_EMISSIONS[key];
+        } else {
+          const litersConsumed = (consVal / 100) * distanceNum;
+          cost = litersConsumed * priceVal;
+          co2 = litersConsumed * CO2_EMISSIONS[key];
+        }
+      }
     }
 
     return {
       key,
-      price: priceVal,
+      price: isUS && key !== "electric_price" ? priceVal * 3.78541 : priceVal,
       consumption: consVal,
       cost,
       co2,
@@ -298,21 +399,45 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
     };
   });
 
-  const costPerKm = (priceNum * consNum) / 100;
-  
+  let periodCostSimple = 0;
+  if (fuelType === "electric_price") {
+    if (isImperial) {
+      const kWhConsumed = consNum > 0 ? (distanceNum / consNum) : 0;
+      periodCostSimple = priceNum * kWhConsumed;
+    } else {
+      const kWhConsumed = (consNum / 100) * distanceNum;
+      periodCostSimple = priceNum * kWhConsumed;
+    }
+  } else {
+    if (isUS) {
+      const gallonsConsumed = consNum > 0 ? (distanceNum / consNum) : 0;
+      periodCostSimple = gallonsConsumed * priceNum;
+    } else if (isGB) {
+      const gallonsConsumed = consNum > 0 ? (distanceNum / consNum) : 0;
+      const litersConsumed = gallonsConsumed * 4.54609;
+      periodCostSimple = litersConsumed * priceNum;
+    } else {
+      periodCostSimple = ((priceNum * consNum) / 100) * distanceNum;
+    }
+  }
+
   // Calculate final outputs based on mode
   const totalRouteDistance = stops.reduce((sum, s) => sum + s.distance, 0);
   const routeCostObj = getRouteTotalForFuel(fuelType);
-  const periodCost = mode === "route" ? routeCostObj.cost : (costPerKm * distanceNum);
+  const periodCost = mode === "route" ? routeCostObj.cost : periodCostSimple;
+
+  const costPerUnitDistance = mode === "route"
+    ? 0
+    : (distanceNum > 0 ? periodCostSimple / distanceNum : 0);
 
   const currencySymbol = initialPrices.currency_symbol || initialPrices.currency || "$";
   const dataSource = initialPrices.data_source || "Database Scraper";
 
   const isElectric = fuelType === "electric_price";
-  const unitLabel = isElectric ? "kWh" : "Liter";
-  const consLabel = isElectric ? "kWh/100km" : "L/100km";
+  const unitLabel = isElectric ? "kWh" : (isUS ? "Gallon" : "Liter");
+  const consLabel = isElectric ? (isImperial ? "mi/kWh" : "kWh/100km") : (isUS ? "MPG" : (isGB ? "MPG (UK)" : "L/100km"));
 
-  const translatedUnitLabel = translate(currentLang, `units.${unitLabel}`);
+  const translatedUnitLabel = isElectric ? "kWh" : (isUS ? (currentLang === "tr" ? "Galon" : "Gallon") : translate(currentLang, `units.Liter`));
 
   const calculateDistanceBetweenCoordinates = (
     lat1: number | null | undefined,
@@ -342,7 +467,11 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
     const d = R * c; // Straight-line distance in km
 
     // Convert to estimated road distance (using standard 1.25 circuity routing factor)
-    return Math.round(d * 1.25);
+    const kmDistance = Math.round(d * 1.25);
+    if (isImperial) {
+      return Math.round(kmDistance * 0.621371);
+    }
+    return kmDistance;
   };
 
   const addStopToRoute = async (city: any) => {
@@ -400,8 +529,9 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
   return (
     <div className="space-y-6">
-      {/* Mode Switcher */}
-      <div className="flex justify-center">
+      {/* Mode and System Switchers */}
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+        {/* Mode Switcher */}
         <div className="inline-flex rounded-xl p-1 bg-[#f5f4f0] border border-[#e7e5e4] shadow-sm">
           <button
             onClick={() => setMode("simple")}
@@ -422,6 +552,30 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
             }`}
           >
             <span>{translate(currentLang, "routePlanner")}</span>
+          </button>
+        </div>
+
+        {/* Unit System Switcher */}
+        <div className="inline-flex rounded-xl p-1 bg-[#f5f4f0] border border-[#e7e5e4] shadow-sm">
+          <button
+            onClick={() => setUnitSystem("metric")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+              unitSystem === "metric"
+                ? "bg-white text-[#1c1917] font-semibold shadow-md border border-[#e7e5e4]/60"
+                : "text-[#78716c] hover:text-[#1c1917]"
+            }`}
+          >
+            {currentLang === "tr" ? "Metrik (Km, L) 🌍" : "Metric (Km, L) 🌍"}
+          </button>
+          <button
+            onClick={() => setUnitSystem("imperial")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+              unitSystem === "imperial"
+                ? "bg-white text-[#1c1917] font-semibold shadow-md border border-[#e7e5e4]/60"
+                : "text-[#78716c] hover:text-[#1c1917]"
+            }`}
+          >
+            {currentLang === "tr" ? "İmparatorluk (Mil, Gal) 👑" : "Imperial (Miles, Gal) 👑"}
           </button>
         </div>
       </div>
@@ -561,7 +715,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                               onChange={(e) => updateStopDistance(stop.id, e.target.value)}
                               className="bg-white border-[#e7e5e4] focus:border-[#a8a29e] text-[#1c1917] font-mono w-32 shadow-sm"
                             />
-                            <span className="text-sm text-[#78716c] font-semibold">km</span>
+                            <span className="text-sm text-[#78716c] font-semibold">{isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"}</span>
                           </div>
                         </div>
                       </div>
@@ -667,7 +821,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   {/* Monthly Distance Input */}
                   <div className="space-y-2">
                     <Label className="text-sm text-[#78716c] font-semibold">
-                      {translate(currentLang, "calculateDistance")}
+                      {isImperial ? (currentLang === "tr" ? "Hesaplanacak mesafe (mil)" : "Calculate for distance (miles)") : translate(currentLang, "calculateDistance")}
                     </Label>
                     <Input
                       type="number"
@@ -712,15 +866,15 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   <>
                     <div>
                       <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
-                        {translate(currentLang, "costPerKm")}
+                        {isImperial ? (currentLang === "tr" ? "Mil başına maliyet" : "Cost per Mile") : translate(currentLang, "costPerKm")}
                       </p>
                       <div className="text-3xl font-bold text-[#1c1917] tracking-tight mt-0.5 font-mono">
-                        {currencySymbol}{costPerKm.toFixed(3)}
+                        {currencySymbol}{costPerUnitDistance.toFixed(3)}
                       </div>
                     </div>
                     <div>
                       <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
-                        {translate(currentLang, "totalCost", { distance: monthlyDistance })}
+                        {translate(currentLang, "totalCost", { distance: `${monthlyDistance} ${isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"}` })}
                       </p>
                       <div className="text-xl font-semibold text-[#44403c] mt-0.5 font-mono">
                         {currencySymbol}{periodCost.toFixed(2)}
@@ -732,10 +886,10 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   <>
                     <div>
                       <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
-                        {translate(currentLang, "totalDistance")}
+                        {isImperial ? (currentLang === "tr" ? "Toplam Rota Mesafesi (mil)" : "Total Route Distance (miles)") : translate(currentLang, "totalDistance")}
                       </p>
                       <div className="text-3xl font-bold text-[#1c1917] tracking-tight mt-0.5 font-mono">
-                        {totalRouteDistance.toLocaleString()} km
+                        {totalRouteDistance.toLocaleString()} {isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"}
                       </div>
                     </div>
                     <div>
@@ -758,7 +912,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                             const leg = calculateLegDetails(fuelType, idx);
                             return (
                               <div key={stop.id} className="flex justify-between text-[#57534e]">
-                                <span>↳ {stop.name} ({leg.distance} km)</span>
+                                <span>↳ {stop.name} ({leg.distance} {isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"})</span>
                                 <span className="text-[#44403c] font-semibold">
                                   {currencySymbol}{leg.cost.toFixed(2)}
                                 </span>
@@ -786,7 +940,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   </h3>
                   <p className="text-sm text-[#6b6661] mt-1">
                     {translate(currentLang, "forDistance", {
-                      distance: mode === "simple" ? monthlyDistance : totalRouteDistance.toString()
+                      distance: `${mode === "simple" ? monthlyDistance : totalRouteDistance.toString()} ${isImperial ? (currentLang === "tr" ? "mil" : "miles") : "km"}`
                     })}
                   </p>
                 </div>
@@ -847,7 +1001,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                             {currencySymbol}{fuel.price.toFixed(3)}
                           </td>
                           <td className="py-4 px-4 opacity-90">
-                            {fuel.consumption.toFixed(1)} {fuel.key === "electric_price" ? "kWh/100km" : "L/100km"}
+                            {fuel.consumption.toFixed(1)} {fuel.key === "electric_price" ? (isImperial ? "mi/kWh" : "kWh/100km") : (isUS ? "MPG" : (isGB ? "MPG (UK)" : "L/100km"))}
                           </td>
                           <td className="py-4 px-4 font-bold font-mono">
                             {currencySymbol}{fuel.cost.toFixed(2)}
