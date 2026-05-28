@@ -185,8 +185,13 @@ export const translations: { [key: string]: any } = {
   }
 };
 
-export function getLanguage(countryCode: string): string {
-  const code = countryCode.toUpperCase();
+export function getLanguage(countryCodeOrLang: string): string {
+  if (!countryCodeOrLang) return 'en';
+  const lower = countryCodeOrLang.toLowerCase();
+  if (translations[lower]) {
+    return lower;
+  }
+  const code = countryCodeOrLang.toUpperCase();
   return countryToLanguage[code] || 'en';
 }
 
