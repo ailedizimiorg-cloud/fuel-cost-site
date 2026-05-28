@@ -88,7 +88,7 @@ export default function CitySearch({ lang, className = "" }: CitySearchProps) {
 
   return (
     <div ref={containerRef} className={`relative w-full max-w-md ${className}`}>
-      <label className="block text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">
+      <label className="block text-xs text-[#57534e] font-semibold uppercase tracking-wider mb-2">
         {translate(lang, "searchTitle")}
       </label>
       <div className="relative">
@@ -103,36 +103,36 @@ export default function CitySearch({ lang, className = "" }: CitySearchProps) {
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={translate(lang, "searchPlaceholder")}
-          className="w-full bg-gray-900 border border-gray-800 text-white rounded-lg px-4 py-2.5 text-sm outline-none focus:border-gray-600 transition duration-200"
+          className="w-full bg-white border border-[#e7e5e4] text-[#1c1917] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#a8a29e] transition duration-200 shadow-sm placeholder-[#a8a29e]"
         />
         {isLoading && (
           <div className="absolute right-3 top-3 flex items-center">
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#78716c] border-t-transparent"></div>
           </div>
         )}
       </div>
 
       {isOpen && query.trim().length >= 2 && (
-        <div className="absolute z-50 w-full mt-1.5 bg-gray-950 border border-gray-800 rounded-lg shadow-xl max-h-64 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-1.5 bg-white border border-[#e7e5e4] rounded-lg shadow-lg max-h-64 overflow-y-auto">
           {results.length > 0 ? (
             results.map((city, index) => (
               <button
                 key={`${city.country_code}-${city.slug}`}
                 onClick={() => handleSelect(city)}
                 onMouseEnter={() => setSelectedIndex(index)}
-                className={`w-full text-left px-4 py-2.5 text-sm transition duration-150 flex items-center justify-between ${
-                  index === selectedIndex ? "bg-gray-900 text-white font-medium animate-none" : "text-gray-300"
+                className={`w-full text-left px-4 py-2.5 text-sm transition duration-150 flex items-center justify-between cursor-pointer ${
+                  index === selectedIndex ? "bg-[#f5f4f0] text-[#1c1917] font-semibold animate-none" : "text-[#44403c] hover:bg-[#faf9f6]"
                 }`}
               >
                 <span>{city.name}</span>
-                <span className="text-xs text-gray-500 uppercase font-mono px-2 py-0.5 bg-gray-900 border border-gray-800 rounded">
+                <span className="text-xs text-[#57534e] uppercase font-mono px-2 py-0.5 bg-[#f5f4f0] border border-[#e7e5e4] rounded">
                   {city.country_code}
                 </span>
               </button>
             ))
           ) : (
             !isLoading && (
-              <div className="px-4 py-3 text-sm text-gray-500">
+              <div className="px-4 py-3 text-sm text-[#78716c]">
                 {translate(lang, "searchNoResults")}
               </div>
             )

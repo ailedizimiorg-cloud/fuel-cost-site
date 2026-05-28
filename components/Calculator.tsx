@@ -313,23 +313,23 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
     <div className="space-y-6">
       {/* Mode Switcher */}
       <div className="flex justify-center">
-        <div className="inline-flex rounded-xl p-1 bg-gray-950 border border-gray-800">
+        <div className="inline-flex rounded-xl p-1 bg-[#f5f4f0] border border-[#e7e5e4] shadow-sm">
           <button
             onClick={() => setMode("simple")}
-            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
               mode === "simple"
-                ? "bg-white text-black font-semibold shadow-md"
-                : "text-gray-400 hover:text-white"
+                ? "bg-white text-[#1c1917] font-semibold shadow-md border border-[#e7e5e4]/60"
+                : "text-[#78716c] hover:text-[#1c1917]"
             }`}
           >
             {translate(currentLang, "standardMode")}
           </button>
           <button
             onClick={() => setMode("route")}
-            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 cursor-pointer ${
               mode === "route"
-                ? "bg-white text-black font-semibold shadow-md"
-                : "text-gray-400 hover:text-white"
+                ? "bg-white text-[#1c1917] font-semibold shadow-md border border-[#e7e5e4]/60"
+                : "text-[#78716c] hover:text-[#1c1917]"
             }`}
           >
             <span>{translate(currentLang, "routePlanner")}</span>
@@ -342,7 +342,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
         <div className="md:col-span-7 space-y-6">
           {mode === "simple" ? (
             <>
-              <h3 className="text-xl font-semibold text-white tracking-tight mb-2">
+              <h3 className="text-xl font-semibold text-[#1c1917] tracking-tight mb-2">
                 {translate(currentLang, "selectFuelType")}
               </h3>
               
@@ -357,7 +357,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                     return (
                       <div
                         key={key}
-                        className="p-4 rounded-xl border border-dashed border-gray-800 text-gray-600 bg-gray-900/30 select-none opacity-50"
+                        className="p-4 rounded-xl border border-dashed border-[#e7e5e4] text-[#a8a29e] bg-[#f5f4f0]/50 select-none opacity-50"
                       >
                         <span className="block text-xs uppercase font-medium tracking-wider">
                           {translate(currentLang, `fuelTypes.${key}`)}
@@ -375,11 +375,11 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       onClick={() => setFuelType(key)}
                       className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
                         isActive
-                          ? "bg-white text-black border-white shadow-xl scale-[1.02]"
-                          : "bg-gray-850 text-gray-300 border-gray-800 hover:border-gray-700 hover:bg-gray-800"
+                          ? "bg-[#1c1917] text-white border-[#1c1917] shadow-md scale-[1.02]"
+                          : "bg-white text-[#44403c] border-[#e7e5e4] hover:border-[#a8a29e] hover:bg-[#faf9f6] shadow-sm"
                       }`}
                     >
-                      <span className={`block text-xs uppercase font-medium tracking-wider ${isActive ? "text-gray-600" : "text-gray-500"}`}>
+                      <span className={`block text-xs uppercase font-medium tracking-wider ${isActive ? "text-[#a8a29e]" : "text-[#78716c]"}`}>
                         {translate(currentLang, `fuelTypes.${key}`)}
                       </span>
                       <span className="block text-2xl font-bold mt-1 tracking-tight">
@@ -391,19 +391,19 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
               </div>
 
               {/* Source & Metadata Card */}
-              <div className="bg-gray-900/50 border border-gray-800/80 p-5 rounded-xl space-y-3">
+              <div className="bg-white border border-[#e7e5e4] p-5 rounded-xl space-y-3 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                  <span className="text-xs text-[#78716c] font-semibold uppercase tracking-wider">
                     {translate(currentLang, "dataSource")}
                   </span>
-                  <span className="px-2 py-0.5 text-xs font-semibold rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
                     {translate(currentLang, "verified")}
                   </span>
                 </div>
-                <p className="text-lg font-medium text-gray-200">
+                <p className="text-lg font-medium text-[#1c1917]">
                   {dataSource}
                 </p>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-[#6b6661]">
                   {translate(currentLang, "dataSourceDescription")}
                 </p>
               </div>
@@ -411,29 +411,29 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
           ) : (
             // Route Planner Flow
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-white tracking-tight flex items-center gap-2">
+              <h3 className="text-xl font-semibold text-[#1c1917] tracking-tight flex items-center gap-2">
                 <span>🛣️</span> {translate(currentLang, "routePlanner")}
               </h3>
 
               {/* Stops list representation */}
-              <div className="space-y-4 relative before:absolute before:left-6 before:top-4 before:bottom-4 before:w-[2px] before:bg-gray-800">
+              <div className="space-y-4 relative before:absolute before:left-6 before:top-4 before:bottom-4 before:w-[2px] before:bg-[#e7e5e4]">
                 {/* Leg 0 (Start Location) */}
                 <div className="flex gap-4 items-start relative z-10">
-                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold shrink-0 text-sm">
+                  <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 font-bold shrink-0 text-sm">
                     A
                   </div>
-                  <div className="flex-1 bg-gray-900/40 border border-gray-800 p-4 rounded-xl flex items-center justify-between">
+                  <div className="flex-1 bg-white border border-[#e7e5e4] p-4 rounded-xl flex items-center justify-between shadow-sm">
                     <div>
-                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                      <p className="text-xs text-[#78716c] font-semibold uppercase tracking-wider">
                         {translate(currentLang, "startLocation", { city: "" })}
                       </p>
-                      <h4 className="text-base font-semibold text-white capitalize">
+                      <h4 className="text-base font-semibold text-[#1c1917] capitalize">
                         {translate(currentLang, "startLocation", { city: "" }) ? "" : "Start: "}
                         {initialPrices.currency_code ? `${countryCode.toUpperCase()} - ` : ""}
                         {typeof window !== "undefined" ? window.location.pathname.split("/").pop() : "Current City"}
                       </h4>
                     </div>
-                    <span className="px-2 py-1 text-[11px] font-mono text-gray-400 bg-gray-850 border border-gray-800 rounded">
+                    <span className="px-2 py-1 text-[11px] font-mono text-[#57534e] bg-[#f5f4f0] border border-[#e7e5e4] rounded">
                       {initialPrices.currency_code}
                     </span>
                   </div>
@@ -444,24 +444,24 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   const letter = String.fromCharCode(66 + index); // B, C, D...
                   return (
                     <div key={stop.id} className="flex gap-4 items-start relative z-10">
-                      <div className="w-12 h-12 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 font-bold shrink-0 text-sm">
+                      <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-bold shrink-0 text-sm">
                         {letter}
                       </div>
-                      <div className="flex-1 space-y-3 bg-gray-900/40 border border-gray-800 p-4 rounded-xl">
+                      <div className="flex-1 space-y-3 bg-white border border-[#e7e5e4] p-4 rounded-xl shadow-sm">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-base font-semibold text-white capitalize">
+                          <h4 className="text-base font-semibold text-[#1c1917] capitalize">
                             {stop.name} ({stop.country_code})
                           </h4>
                           <button
                             onClick={() => removeStop(stop.id)}
-                            className="text-gray-500 hover:text-red-400 p-1 rounded-lg transition duration-150 cursor-pointer text-sm font-medium"
+                            className="text-[#78716c] hover:text-red-600 p-1 rounded-lg transition duration-150 cursor-pointer text-sm font-medium"
                           >
                             ✕
                           </button>
                         </div>
 
                         <div className="space-y-1.5">
-                          <Label className="text-xs text-gray-500 uppercase font-medium">
+                          <Label className="text-xs text-[#78716c] uppercase font-semibold">
                             {translate(currentLang, "distanceTo", { city: stop.name })}
                           </Label>
                           <div className="flex items-center gap-2">
@@ -470,9 +470,9 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                               min="1"
                               value={stop.distance}
                               onChange={(e) => updateStopDistance(stop.id, e.target.value)}
-                              className="bg-gray-850 border-gray-800 focus:border-gray-700 text-white font-mono w-32"
+                              className="bg-white border-[#e7e5e4] focus:border-[#a8a29e] text-[#1c1917] font-mono w-32 shadow-sm"
                             />
-                            <span className="text-sm text-gray-400 font-medium">km</span>
+                            <span className="text-sm text-[#78716c] font-semibold">km</span>
                           </div>
                         </div>
                       </div>
@@ -483,7 +483,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
               {/* Add Stop Inputs */}
               <div ref={searchContainerRef} className="relative pt-2">
-                <Label className="block text-xs text-gray-500 uppercase tracking-wider mb-2 font-medium">
+                <Label className="block text-xs text-[#78716c] uppercase tracking-wider mb-2 font-semibold">
                   {translate(currentLang, stops.length > 0 ? "addAnotherStop" : "addStop")}
                 </Label>
                 <div className="relative">
@@ -496,33 +496,33 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                     }}
                     onFocus={() => setSearchOpen(true)}
                     placeholder={translate(currentLang, "searchPlaceholder")}
-                    className="bg-gray-900 border-gray-800 focus:border-gray-700 text-white rounded-xl py-3 px-4"
+                    className="bg-white border border-[#e7e5e4] focus:border-[#a8a29e] text-[#1c1917] rounded-xl py-3 px-4 shadow-sm placeholder-[#a8a29e]"
                   />
                   {searchLoading && (
                     <div className="absolute right-3 top-3.5 flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#78716c] border-t-transparent"></div>
                     </div>
                   )}
                 </div>
 
                 {searchOpen && searchQuery.trim().length >= 2 && (
-                  <div className="absolute z-50 w-full mt-2 bg-gray-950 border border-gray-850 rounded-xl shadow-2xl max-h-56 overflow-y-auto">
+                  <div className="absolute z-50 w-full mt-2 bg-white border border-[#e7e5e4] rounded-xl shadow-xl max-h-56 overflow-y-auto">
                     {searchResults.length > 0 ? (
                       searchResults.map((city) => (
                         <button
                           key={`${city.country_code}-${city.slug}`}
                           onClick={() => addStopToRoute(city)}
-                          className="w-full text-left px-4 py-3 text-sm hover:bg-gray-900 text-gray-300 hover:text-white transition duration-150 flex items-center justify-between border-b border-gray-900"
+                          className="w-full text-left px-4 py-3 text-sm hover:bg-[#f5f4f0] text-[#44403c] hover:text-[#1c1917] transition duration-150 flex items-center justify-between border-b border-[#e7e5e4] cursor-pointer"
                         >
                           <span className="font-medium">{city.name}</span>
-                          <span className="text-xs text-gray-500 uppercase font-mono px-2 py-0.5 bg-gray-900 border border-gray-800 rounded">
+                          <span className="text-xs text-[#57534e] uppercase font-mono px-2 py-0.5 bg-[#f5f4f0] border border-[#e7e5e4] rounded">
                             {city.country_code}
                           </span>
                         </button>
                       ))
                     ) : (
                       !searchLoading && (
-                        <div className="px-4 py-3 text-sm text-gray-500">
+                        <div className="px-4 py-3 text-sm text-[#78716c]">
                           {translate(currentLang, "searchNoResults")}
                         </div>
                       )
@@ -536,9 +536,9 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
         {/* Right side: Fuel Cost Calculator / Route calculations */}
         <div className="md:col-span-5">
-          <Card className="bg-gray-900/40 border border-gray-800/80 rounded-xl h-full shadow-lg">
+          <Card className="bg-white border border-[#e7e5e4] rounded-xl h-full shadow-md">
             <CardHeader>
-              <CardTitle className="text-lg text-white font-semibold">
+              <CardTitle className="text-lg text-[#1c1917] font-semibold">
                 {mode === "simple"
                   ? translate(currentLang, "costEstimator")
                   : translate(currentLang, "routeCostSummary")}
@@ -549,7 +549,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                 <>
                   {/* Price Override Input */}
                   <div className="space-y-2">
-                    <Label className="text-sm text-gray-400">
+                    <Label className="text-sm text-[#78716c] font-semibold">
                       {translate(currentLang, "pricePerUnit", { unit: translatedUnitLabel, currency: currencySymbol })}
                     </Label>
                     <Input
@@ -557,13 +557,13 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       step="0.001"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="bg-gray-850 border-gray-800 focus:border-gray-700 text-white font-medium"
+                      className="bg-white border-[#e7e5e4] focus:border-[#a8a29e] text-[#1c1917] font-semibold shadow-sm"
                     />
                   </div>
 
                   {/* Consumption Input */}
                   <div className="space-y-2">
-                    <Label className="text-sm text-gray-400">
+                    <Label className="text-sm text-[#78716c] font-semibold">
                       {translate(currentLang, "consumptionLabel", { cons: consLabel })}
                     </Label>
                     <Input
@@ -571,13 +571,13 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       step="0.1"
                       value={consumption}
                       onChange={(e) => setConsumption(e.target.value)}
-                      className="bg-gray-850 border-gray-800 focus:border-gray-700 text-white font-medium"
+                      className="bg-white border-[#e7e5e4] focus:border-[#a8a29e] text-[#1c1917] font-semibold shadow-sm"
                     />
                   </div>
 
                   {/* Monthly Distance Input */}
                   <div className="space-y-2">
-                    <Label className="text-sm text-gray-400">
+                    <Label className="text-sm text-[#78716c] font-semibold">
                       {translate(currentLang, "calculateDistance")}
                     </Label>
                     <Input
@@ -585,25 +585,25 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       step="100"
                       value={monthlyDistance}
                       onChange={(e) => setMonthlyDistance(e.target.value)}
-                      className="bg-gray-850 border-gray-800 focus:border-gray-700 text-white font-medium"
+                      className="bg-white border-[#e7e5e4] focus:border-[#a8a29e] text-[#1c1917] font-semibold shadow-sm"
                     />
                   </div>
                 </>
               ) : (
                 // Route Mode Cost Estimator inputs
                 <div className="space-y-5">
-                  <div className="p-4 bg-gray-950/40 border border-gray-850 rounded-xl flex items-center justify-between">
-                    <span className="text-xs uppercase tracking-wider text-gray-500 font-medium">
+                  <div className="p-4 bg-[#f5f4f0]/60 border border-[#e7e5e4] rounded-xl flex items-center justify-between shadow-sm">
+                    <span className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
                       {translate(currentLang, "fuelTypes." + fuelType as any)} Price
                     </span>
-                    <span className="text-sm font-semibold text-white">
+                    <span className="text-sm font-bold text-[#1c1917]">
                       {currencySymbol}{(initialPrices[fuelType] as number || 0).toFixed(3)}
                     </span>
                   </div>
 
                   {/* Consumption Input in Route Mode */}
                   <div className="space-y-2">
-                    <Label className="text-sm text-gray-400">
+                    <Label className="text-sm text-[#78716c] font-semibold">
                       {translate(currentLang, "consumptionLabel", { cons: consLabel })}
                     </Label>
                     <Input
@@ -611,29 +611,29 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       step="0.1"
                       value={consumption}
                       onChange={(e) => setConsumption(e.target.value)}
-                      className="bg-gray-850 border-gray-800 focus:border-gray-700 text-white font-medium"
+                      className="bg-white border-[#e7e5e4] focus:border-[#a8a29e] text-[#1c1917] font-semibold shadow-sm"
                     />
                   </div>
                 </div>
               )}
 
               {/* Result Outputs */}
-              <div className="pt-4 border-t border-gray-800/80 space-y-4">
+              <div className="pt-4 border-t border-[#e7e5e4] space-y-4">
                 {mode === "simple" ? (
                   <>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
+                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
                         {translate(currentLang, "costPerKm")}
                       </p>
-                      <div className="text-3xl font-bold text-white tracking-tight mt-0.5 font-mono">
+                      <div className="text-3xl font-bold text-[#1c1917] tracking-tight mt-0.5 font-mono">
                         {currencySymbol}{costPerKm.toFixed(3)}
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
+                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
                         {translate(currentLang, "totalCost", { distance: monthlyDistance })}
                       </p>
-                      <div className="text-xl font-semibold text-gray-200 mt-0.5 font-mono">
+                      <div className="text-xl font-semibold text-[#44403c] mt-0.5 font-mono">
                         {currencySymbol}{periodCost.toFixed(2)}
                       </div>
                     </div>
@@ -642,35 +642,35 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   // Route Mode Totals
                   <>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
+                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
                         {translate(currentLang, "totalDistance")}
                       </p>
-                      <div className="text-3xl font-bold text-white tracking-tight mt-0.5 font-mono">
+                      <div className="text-3xl font-bold text-[#1c1917] tracking-tight mt-0.5 font-mono">
                         {totalRouteDistance.toLocaleString()} km
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
+                      <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold">
                         {translate(currentLang, "routeCostSummary")}
                       </p>
-                      <div className="text-2xl font-bold text-green-400 mt-0.5 font-mono">
+                      <div className="text-2xl font-bold text-emerald-700 mt-0.5 font-mono">
                         {currencySymbol}{periodCost.toFixed(2)}
                       </div>
                     </div>
 
                     {/* Breakdown of stops if any exist */}
                     {stops.length > 0 && (
-                      <div className="pt-4 border-t border-gray-800/40 space-y-2">
-                        <p className="text-xs uppercase tracking-wider text-gray-500 font-medium mb-1">
+                      <div className="pt-4 border-t border-[#e7e5e4]/80 space-y-2">
+                        <p className="text-xs uppercase tracking-wider text-[#78716c] font-semibold mb-1">
                           Leg Costs:
                         </p>
                         <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1 font-mono text-xs">
                           {stops.map((stop, idx) => {
                             const leg = calculateLegDetails(fuelType, idx);
                             return (
-                              <div key={stop.id} className="flex justify-between text-gray-400">
+                              <div key={stop.id} className="flex justify-between text-[#57534e]">
                                 <span>↳ {stop.name} ({leg.distance} km)</span>
-                                <span className="text-gray-300 font-medium">
+                                <span className="text-[#44403c] font-semibold">
                                   {currencySymbol}{leg.cost.toFixed(2)}
                                 </span>
                               </div>
@@ -689,19 +689,19 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
         {/* Dynamic Eco-Comparison Table */}
         {fuelsWithScore.length > 0 && (
           <div className="md:col-span-12 mt-4">
-            <div className="bg-gray-900/40 border border-gray-800/80 rounded-xl p-6 shadow-lg">
+            <div className="bg-white border border-[#e7e5e4] rounded-xl p-6 shadow-md">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                  <h3 className="text-xl font-bold text-white tracking-tight">
+                  <h3 className="text-xl font-bold text-[#1c1917] tracking-tight">
                     {translate(currentLang, "comparisonTable")}
                   </h3>
-                  <p className="text-sm text-gray-400 mt-1">
+                  <p className="text-sm text-[#6b6661] mt-1">
                     {translate(currentLang, "forDistance", {
                       distance: mode === "simple" ? monthlyDistance : totalRouteDistance.toString()
                     })}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 bg-green-500/10 text-green-400 px-3 py-1.5 rounded-lg border border-green-500/20 text-xs font-semibold">
+                <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-100 text-xs font-semibold shadow-sm">
                   <span>🍃</span>
                   <span>
                     {currentLang === "tr"
@@ -714,7 +714,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-800 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-[#e7e5e4] text-xs font-semibold uppercase tracking-wider text-[#78716c]">
                       <th className="py-3 px-4">
                         {currentLang === "tr" ? "Yakıt Türü" : "Fuel Type"}
                       </th>
@@ -735,7 +735,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-800/50">
+                  <tbody className="divide-y divide-[#e7e5e4]">
                     {fuelsWithScore.map((fuel) => {
                       const isSelected = fuelType === fuel.key;
                       const leaves = Array(fuel.leafCount).fill("🍃").join(" ");
@@ -743,30 +743,30 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                         <tr
                           key={fuel.key}
                           className={`text-sm transition-colors ${
-                            isSelected ? "bg-white/5 font-medium text-white" : "text-gray-300 hover:bg-gray-900/20"
+                            isSelected ? "bg-[#f5f4f0] font-semibold text-[#1c1917]" : "text-[#44403c] hover:bg-[#faf9f6]"
                           }`}
                         >
-                          <td className="py-4 px-4 font-semibold text-white flex items-center gap-2">
+                          <td className="py-4 px-4 font-semibold text-[#1c1917] flex items-center gap-2">
                             {translate(currentLang, `fuelTypes.${fuel.key}`)}
                             {isSelected && (
-                              <span className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                              <span className="text-[10px] bg-sky-50 text-sky-700 border border-sky-100 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
                                 {currentLang === "tr" ? "Aktif" : "Active"}
                               </span>
                             )}
                           </td>
-                          <td className="py-4 px-4 font-mono">
+                          <td className="py-4 px-4 font-mono text-[#57534e]">
                             {currencySymbol}{fuel.price.toFixed(3)}
                           </td>
-                          <td className="py-4 px-4">
+                          <td className="py-4 px-4 text-[#44403c]">
                             {fuel.consumption.toFixed(1)} {fuel.key === "electric_price" ? "kWh/100km" : "L/100km"}
                           </td>
-                          <td className="py-4 px-4 font-semibold font-mono text-white">
+                          <td className="py-4 px-4 font-semibold font-mono text-[#1c1917]">
                             {currencySymbol}{fuel.cost.toFixed(2)}
                           </td>
-                          <td className="py-4 px-4 font-mono">
+                          <td className="py-4 px-4 font-mono text-[#57534e]">
                             {fuel.co2.toFixed(1)} kg CO₂
                           </td>
-                          <td className="py-4 px-4 text-right font-bold text-green-400 select-none tracking-widest text-lg">
+                          <td className="py-4 px-4 text-right font-bold text-emerald-600 select-none tracking-widest text-lg">
                             {leaves}
                           </td>
                         </tr>

@@ -46,15 +46,15 @@ export default function LanguageSelector({ currentLang }: LanguageSelectorProps)
   };
 
   return (
-    <div className="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-lg px-3 py-1.5 w-fit ml-auto">
-      <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">Language:</span>
+    <div className="flex items-center gap-2 bg-white border border-[#e7e5e4] rounded-lg px-3 py-1.5 w-fit ml-auto shadow-sm">
+      <span className="text-xs text-[#78716c] font-semibold uppercase tracking-wider">Language:</span>
       <select
         value={currentLang}
         onChange={(e) => handleLanguageChange(e.target.value)}
-        className="bg-transparent text-sm text-white font-medium border-none outline-none cursor-pointer focus:ring-0 pr-1"
+        className="bg-transparent text-sm text-[#1c1917] font-semibold border-none outline-none cursor-pointer focus:ring-0 pr-1"
       >
         {languages.map((lang) => (
-          <option key={lang.code} value={lang.code} className="bg-gray-950 text-white">
+          <option key={lang.code} value={lang.code} className="bg-white text-[#1c1917]">
             {lang.flag} &nbsp; {lang.name}
           </option>
         ))}

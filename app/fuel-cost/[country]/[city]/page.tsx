@@ -133,49 +133,49 @@ export default async function FuelPage({
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-20 text-white">
+    <div className="max-w-4xl mx-auto px-6 py-20 text-[#1c1917]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
       {/* Üst Kısım: Dil Seçici ve Şehir Arama */}
-      <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-gray-800 pb-6">
+      <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-[#e7e5e4] pb-6">
         <CitySearch lang={currentLang} className="w-full md:max-w-xs" />
         <LanguageSelector currentLang={currentLang} />
       </div>
 
-      <h1 className="text-5xl font-semibold tracking-[-2.4px] mb-8 text-white">
+      <h1 className="text-5xl font-semibold tracking-[-2.4px] mb-8 text-[#1c1917]">
         {translatedTitle}
       </h1>
       
-      <p className="text-lg text-gray-400 mb-10">{description}</p>
+      <p className="text-lg text-[#57534e] mb-10 leading-relaxed">{description}</p>
 
       {/* Calculator bileşenine tüm fiyatları, ülke kodunu ve geçerli dili gönderiyoruz */}
       <Calculator initialPrices={prices} countryCode={country} lang={currentLang} />
 
-      <h2 className="text-2xl font-semibold mt-12 mb-6 text-white">
+      <h2 className="text-2xl font-semibold mt-12 mb-6 text-[#1c1917]">
         {translate(currentLang, 'priceComparisons')}
       </h2>
-      <table className="w-full text-left bg-gray-800 border-gray-700 rounded-lg overflow-hidden">
-        <thead className="bg-gray-700">
+      <table className="w-full text-left bg-white border border-[#e7e5e4] rounded-xl overflow-hidden shadow-sm">
+        <thead className="bg-[#f5f4f0] border-b border-[#e7e5e4]">
           <tr>
-            <th className="p-4 text-white">
+            <th className="p-4 text-[#44403c] font-semibold">
               {translate(currentLang, 'location')}
             </th>
-            <th className="p-4 text-white">
+            <th className="p-4 text-[#44403c] font-semibold">
               {translate(currentLang, 'originalPrice')}
             </th>
-            <th className="p-4 text-white">
+            <th className="p-4 text-[#44403c] font-semibold">
               {translate(currentLang, 'convertedPrice', { localCurrency: prices.currency_symbol || prices.currency || '$' })}
             </th>
           </tr>
         </thead>
         <tbody>
           {comparisons.map((c) => (
-            <tr key={c.city} className="border-t border-gray-700">
-              <td className="p-4 text-gray-300">{c.city}</td>
-              <td className="p-4 text-gray-300 font-mono">
+            <tr key={c.city} className="border-t border-[#e7e5e4] hover:bg-[#faf9f6]/80 transition-colors">
+              <td className="p-4 text-[#44403c]">{c.city}</td>
+              <td className="p-4 text-[#57534e] font-mono">
                 {c.currencySymbol}{c.price.toFixed(2)}
               </td>
-              <td className="p-4 text-green-400 font-mono font-semibold">
+              <td className="p-4 text-emerald-700 font-mono font-semibold">
                 {c.convertedPrice !== null ? (
                   `${c.targetCurrencySymbol}${c.convertedPrice.toFixed(2)}`
                 ) : (
