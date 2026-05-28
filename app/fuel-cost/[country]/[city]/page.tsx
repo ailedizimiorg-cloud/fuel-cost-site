@@ -88,7 +88,12 @@ export default async function FuelPage({
   const primaryPrice = prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
   const currencySymbol = prices.currency_symbol || prices.currency || "$";
   const description = generateDescription(city, primaryPrice, currencySymbol, country);
-  const comparisons = await getComparisonData(city, country);
+  const comparisons = await getComparisonData(
+    city, 
+    country, 
+    prices.currency_code || undefined, 
+    prices.currency_symbol || undefined
+  );
   console.log("Comparisons:", comparisons);
 
   const translatedTitle = translate(currentLang, 'title', {
@@ -146,7 +151,10 @@ export default async function FuelPage({
               {translate(currentLang, 'location')}
             </th>
             <th className="p-4 text-white">
-              {translate(currentLang, 'price')}
+              {translate(currentLang, 'originalPrice')}
+            </th>
+            <th className="p-4 text-white">
+              {translate(currentLang, 'convertedPrice', { localCurrency: prices.currency_symbol || prices.currency || '$' })}
             </th>
           </tr>
         </thead>
@@ -154,8 +162,15 @@ export default async function FuelPage({
           {comparisons.map((c) => (
             <tr key={c.city} className="border-t border-gray-700">
               <td className="p-4 text-gray-300">{c.city}</td>
-              <td className="p-4 text-gray-300">
+              <td className="p-4 text-gray-300 font-mono">
                 {c.currencySymbol}{c.price.toFixed(2)}
+              </td>
+              <td className="p-4 text-green-400 font-mono font-semibold">
+                {c.convertedPrice !== null ? (
+                  `${c.targetCurrencySymbol}${c.convertedPrice.toFixed(2)}`
+                ) : (
+                  `${c.currencySymbol}${c.price.toFixed(2)}`
+                )}
               </td>
             </tr>
           ))}

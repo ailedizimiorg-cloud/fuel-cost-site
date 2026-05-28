@@ -20,8 +20,23 @@ export function generateDescription(
   });
 }
 
-export async function getComparisonData(city: string, countryCode: string) {
+export async function getComparisonData(
+  city: string, 
+  countryCode: string,
+  targetCurrencyCode?: string,
+  targetCurrencySymbol?: string
+) {
   const supabase = createAdminClient();
+  
+  // Fetch exchange rates from external API
+  let rates: { [key: string]: number } = {};
+  try {
+    const res = await fetch("https://open.er-api.com/v6/latest/USD");
+    const json = await res.json();
+    rates = json.rates || {};
+  } catch (err) {
+    console.error("Failed to fetch exchange rates for comparison:", err);
+  }
   
   // Directly get the total count of cities globally with valid gasoline price
   const { count: globalCount, error: globalCountError } = await supabase
@@ -39,7 +54,7 @@ export async function getComparisonData(city: string, countryCode: string) {
     try {
       const { data, error } = await supabase
         .from('cities')
-        .select('name, country_code, gasoline_price, currency_symbol')
+        .select('name, country_code, gasoline_price, currency_symbol, currency_code')
         .not('gasoline_price', 'is', null)
         .gt('gasoline_price', 0)
         .range(offset, offset);
@@ -93,9 +108,28 @@ export async function getComparisonData(city: string, countryCode: string) {
   // Slice exactly to 5 items in case of fallback overflowing
   const finalCities = uniqueCountryCities.slice(0, 5);
 
-  return finalCities.map(item => ({
-    city: `${item.name} (${item.country_code})`,
-    price: parseFloat(item.gasoline_price),
-    currencySymbol: item.currency_symbol || '$'
-  }));
+  return finalCities.map(item => {
+    const origPrice = parseFloat(item.gasoline_price);
+    const origCurrencyCode = item.currency_code || 'USD';
+    const origCurrencySymbol = item.currency_symbol || '$';
+
+    let convertedPrice: number | null = null;
+    if (
+      targetCurrencyCode && 
+      targetCurrencyCode !== origCurrencyCode && 
+      rates[origCurrencyCode] && 
+      rates[targetCurrencyCode]
+    ) {
+      const usdPrice = origPrice / rates[origCurrencyCode];
+      convertedPrice = usdPrice * rates[targetCurrencyCode];
+    }
+
+    return {
+      city: `${item.name} (${item.country_code})`,
+      price: origPrice,
+      currencySymbol: origCurrencySymbol,
+      convertedPrice: convertedPrice,
+      targetCurrencySymbol: targetCurrencySymbol || '$'
+    };
+  });
 }
