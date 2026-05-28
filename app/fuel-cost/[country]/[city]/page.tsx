@@ -146,7 +146,7 @@ export default async function FuelPage({
               {translate(currentLang, 'location')}
             </th>
             <th className="p-4 text-white">
-              {translate(currentLang, 'price')} ({currencySymbol})
+              {translate(currentLang, 'price')}
             </th>
           </tr>
         </thead>
@@ -154,7 +154,9 @@ export default async function FuelPage({
           {comparisons.map((c) => (
             <tr key={c.city} className="border-t border-gray-700">
               <td className="p-4 text-gray-300">{c.city}</td>
-              <td className="p-4 text-gray-300">{currencySymbol}{c.price.toFixed(2)}</td>
+              <td className="p-4 text-gray-300">
+                {c.currencySymbol}{c.price.toFixed(2)}
+              </td>
             </tr>
           ))}
         </tbody>
