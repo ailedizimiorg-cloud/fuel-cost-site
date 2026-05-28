@@ -1,6 +1,7 @@
 // lib/fuel-api.ts
 import { createAdminClient } from './supabaseClient'; // Yetkili istemciyi import ediyoruz
 import { getComparisonData, generateDescription } from './seo-utils';
+import { cache } from 'react';
 
 export interface FuelPrices {
   gasoline_price: number | null;
@@ -13,7 +14,7 @@ export interface FuelPrices {
   currency_symbol: string | null;
 }
 
-export async function getFuelPrices(countryCode: string, city: string): Promise<FuelPrices | null> {
+export const getFuelPrices = cache(async (countryCode: string, city: string): Promise<FuelPrices | null> => {
   const supabase = createAdminClient(); // Normal istemci yerine admin istemcisini kullanıyoruz
   
   console.log(`[${countryCode}] Admin client created. Querying Supabase...`);
@@ -46,6 +47,6 @@ export async function getFuelPrices(countryCode: string, city: string): Promise<
     currency_code: data.currency_code || null,
     currency_symbol: data.currency_symbol || null,
   };
-}
+});
 
 export { getComparisonData, generateDescription };

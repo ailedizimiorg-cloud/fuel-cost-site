@@ -4,6 +4,55 @@ import Calculator from "@/components/Calculator";
 import LanguageSelector from "@/components/LanguageSelector";
 import { notFound } from 'next/navigation';
 import { translate, getLanguage } from "@/lib/i18n";
+import { Metadata } from "next";
+
+export async function generateMetadata({ 
+  params, 
+  searchParams 
+}: { 
+  params: Promise<{ country: string; city: string }>; 
+  searchParams: Promise<{ lang?: string }> 
+}): Promise<Metadata> {
+  const { country, city } = await params;
+  const { lang } = await searchParams;
+
+  const prices = await getFuelPrices(country, city);
+  if (!prices) {
+    return {
+      title: "Fuel Prices Tracker",
+    };
+  }
+
+  const currentLang = getLanguage(lang || country);
+  const primaryPrice = prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
+  const currencySymbol = prices.currency_symbol || prices.currency || "$";
+  const description = generateDescription(city, primaryPrice, currencySymbol, country);
+
+  const translatedTitle = translate(currentLang, 'title', {
+    city: city.charAt(0).toUpperCase() + city.slice(1),
+    country: country.toUpperCase(),
+  });
+
+  const baseUrl = "https://fuelcost.info";
+  const canonicalUrl = `${baseUrl}/fuel-cost/${country}/${city}`;
+
+  const languagesList = ['en', 'tr', 'de', 'fr', 'es', 'it'];
+  const languageAlternates: { [key: string]: string } = {};
+
+  languagesList.forEach((l) => {
+    languageAlternates[l] = `${canonicalUrl}?lang=${l}`;
+  });
+  languageAlternates['x-default'] = canonicalUrl;
+
+  return {
+    title: translatedTitle,
+    description: description,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: languageAlternates,
+    }
+  };
+}
 
 export default async function FuelPage({ 
   params, 
