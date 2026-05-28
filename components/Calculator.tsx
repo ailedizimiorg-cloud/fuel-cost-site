@@ -656,7 +656,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                 {translate(currentLang, "selectFuelType")}
               </h3>
               
-              {/* Dynamic Brutalist Tabs with prices inside */}
+              {/* Dynamic Brutalist Tabs with eco colors inside */}
               <div className="grid grid-cols-2 gap-3">
                 {fuelTypeKeys.map((key) => {
                   const val = initialPrices[key] as number | null;
@@ -679,17 +679,41 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                     );
                   }
 
+                  // Determine colors based on eco-scale (Green to Brown)
+                  const buttonStyles = {
+                    electric_price: {
+                      active: "bg-emerald-50 text-emerald-900 border-emerald-500 shadow-md scale-[1.02] ring-2 ring-emerald-500/20 font-bold",
+                      inactive: "bg-white text-[#44403c] border-[#e7e5e4] hover:border-emerald-300 hover:bg-emerald-50/20 shadow-sm",
+                      labelActive: "text-emerald-600/90"
+                    },
+                    lpg_price: {
+                      active: "bg-[#f0fdf4]/80 text-emerald-800 border-emerald-400 shadow-md scale-[1.02] ring-2 ring-emerald-400/20 font-bold",
+                      inactive: "bg-white text-[#44403c] border-[#e7e5e4] hover:border-emerald-200 hover:bg-[#f0fdf4]/20 shadow-sm",
+                      labelActive: "text-emerald-600/90"
+                    },
+                    gasoline_price: {
+                      active: "bg-[#fdf8f2] text-[#6c4e31] border-[#d5bda5] shadow-md scale-[1.02] ring-2 ring-[#d5bda5]/20 font-bold",
+                      inactive: "bg-white text-[#44403c] border-[#e7e5e4] hover:border-[#d5bda5]/50 hover:bg-[#fdf8f2]/20 shadow-sm",
+                      labelActive: "text-[#96714c]"
+                    },
+                    diesel_price: {
+                      active: "bg-[#f7ece1] text-[#543a21] border-[#c0a080] shadow-md scale-[1.02] ring-2 ring-[#c0a080]/20 font-bold",
+                      inactive: "bg-white text-[#44403c] border-[#e7e5e4] hover:border-[#c0a080]/50 hover:bg-[#f7ece1]/20 shadow-sm",
+                      labelActive: "text-[#7c5b3c]"
+                    }
+                  };
+
+                  const currentStyle = buttonStyles[key];
+                  const btnClass = isActive ? currentStyle.active : currentStyle.inactive;
+                  const labelClass = isActive ? currentStyle.labelActive : "text-[#78716c]";
+
                   return (
                     <button
                       key={key}
                       onClick={() => setFuelType(key)}
-                      className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
-                        isActive
-                          ? "bg-[#1c1917] text-white border-[#1c1917] shadow-md scale-[1.02]"
-                          : "bg-white text-[#44403c] border-[#e7e5e4] hover:border-[#a8a29e] hover:bg-[#faf9f6] shadow-sm"
-                      }`}
+                      className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${btnClass}`}
                     >
-                      <span className={`block text-xs uppercase font-medium tracking-wider ${isActive ? "text-[#a8a29e]" : "text-[#78716c]"}`}>
+                      <span className={`block text-xs uppercase font-medium tracking-wider ${labelClass}`}>
                         {translate(currentLang, `fuelTypes.${key}`)}
                       </span>
                       <span className="block text-2xl font-bold mt-1 tracking-tight">
