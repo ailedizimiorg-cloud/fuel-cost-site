@@ -19,7 +19,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans text-[#171717] bg-[#ffffff] min-h-screen flex flex-col">
         <nav className="p-6 border-b border-[#ebebeb] flex justify-between items-center">
-          <span className="font-semibold text-lg">fuelcost.info</span>
+          <span className="font-semibold text-lg">FuelCost.info</span>
           <div className="space-x-4 text-sm font-medium">
             <a href="/">Home</a>
             <a href="/about">About</a>
@@ -27,7 +27,7 @@ export default function RootLayout({
         </nav>
         <main className="flex-grow">{children}</main>
         <footer className="p-10 border-t border-[#ebebeb] text-sm text-[#666666] text-center">
-          <p>© {new Date().getFullYear()} fuelcost.info - Daily Price Tracking</p>
+          <p>© {new Date().getFullYear()} FuelCost.info - Daily Price Tracking</p>
         </footer>
       </body>
     </html>
