@@ -3,8 +3,52 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Fuel Cost Tracker",
-  description: "Real-time fuel prices by location.",
+  title: {
+    default: "FuelCost.info - Compare Gasoline, Diesel, LPG & EV Prices Across 48,000+ Cities",
+    template: "%s | FuelCost.info",
+  },
+  description: "Compare real-time gasoline, diesel, LPG, and electric vehicle charging costs across 48,000+ cities worldwide. Automatic currency conversion and eco-score comparison.",
+  keywords: ["fuel prices", "gasoline prices", "diesel prices", "LPG prices", "EV charging costs", "fuel cost calculator", "compare fuel prices worldwide"],
+  authors: [{ name: "FuelCost.info" }],
+  creator: "FuelCost.info",
+  publisher: "FuelCost.info",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    title: "FuelCost.info - Compare Global Fuel Prices",
+    description: "Compare real-time fuel prices across 48,000+ cities. Gasoline, diesel, LPG, and EV charging costs with automatic currency conversion.",
+    url: "https://fuelcost.info",
+    siteName: "FuelCost.info",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://fuelcost.info/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "FuelCost.info - Compare Global Fuel Prices",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FuelCost.info - Compare Global Fuel Prices",
+    description: "Compare real-time fuel prices across 48,000+ cities. Gasoline, diesel, LPG, and EV charging costs.",
+    images: ["https://fuelcost.info/og-image.png"],
+    creator: "@fuelcostinfo",
+  },
+  verification: {
+    google: "",
+  },
+  category: "utilities",
 };
 
 export default function RootLayout({
