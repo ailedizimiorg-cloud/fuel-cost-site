@@ -157,16 +157,20 @@ export default async function FuelPage({
   const productSchemas = generateProductSchemas(city, country, prices);
   const faqSchema = generateMultiFaqSchema([
     {
-      question: `What is the cheapest fuel type in ${cityCap}, ${countryUpper}?`,
-      answer: `Based on current prices in ${cityCap}, fuel costs vary. Gasoline is ${currencySymbol}${(prices.gasoline_price || 0).toFixed(2)}/L, diesel is ${currencySymbol}${(prices.diesel_price || 0).toFixed(2)}/L, LPG is ${currencySymbol}${(prices.lpg_price || 0).toFixed(2)}/L, and electricity is ${currencySymbol}${(prices.electric_price || 0).toFixed(2)}/kWh. Compare costs based on your vehicle using the calculator above.`,
+      question: translate(currentLang, "faqQ1", { city: cityCap, country: countryUpper }),
+      answer: translate(currentLang, "faqA1", { city: cityCap, country: countryUpper, currency: currencySymbol, gasoline: (prices.gasoline_price || 0).toFixed(2), diesel: (prices.diesel_price || 0).toFixed(2), lpg: (prices.lpg_price || 0).toFixed(2), electric: (prices.electric_price || 0).toFixed(2) }),
     },
     {
-      question: `How do fuel prices in ${cityCap} compare to other cities worldwide?`,
-      answer: `Our global comparison tool shows fuel prices from ${cityCap} alongside 5 randomly selected cities from different countries, with all prices converted to ${currencySymbol} for easy comparison. Use the city search bar to explore any of 48,000+ cities.`,
+      question: translate(currentLang, "faqQ2", { city: cityCap, country: countryUpper }),
+      answer: translate(currentLang, "faqA2", { city: cityCap, country: countryUpper, currency: currencySymbol }),
     },
     {
-      question: `Which fuel produces the least CO\u2082 emissions in ${cityCap}?`,
-      answer: `Electric vehicles (EVs) produce the least CO\u2082 emissions per kilometer. Among fossil fuels, LPG produces approximately 1.51 kg CO\u2082 per liter, gasoline produces 2.31 kg CO\u2082/L, and diesel produces 2.68 kg CO\u2082/L. Our eco-comparison table ranks each fuel type by carbon footprint.`,
+      question: translate(currentLang, "faqQ3", { city: cityCap, country: countryUpper }),
+      answer: translate(currentLang, "faqA3", { city: cityCap, country: countryUpper }),
+    },
+    {
+      question: translate(currentLang, "faqQ4", { city: cityCap, country: countryUpper }),
+      answer: translate(currentLang, "faqA4", { city: cityCap, country: countryUpper }),
     },
   ]);
   const webAppSchema = generateWebAppSchema(
@@ -323,60 +327,64 @@ export default async function FuelPage({
 
       {/* FAQ Section */}
       <h2 className="text-2xl font-semibold mt-12 mb-6 text-[#1c1917]">
-        Frequently Asked Questions
+        {translate(currentLang, "faqTitle") || "Frequently Asked Questions"}
       </h2>
       <div className="space-y-4 mb-12">
         <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
           <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>What is the cheapest fuel type in {cityCap}, {countryUpper}?</span>
+            <span>{translate(currentLang, "faqQ1", { city: cityCap, country: countryUpper })}</span>
             <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
           </summary>
           <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            Based on current prices in {cityCap}, fuel costs vary significantly:
-            Gasoline is {currencySymbol}{(prices.gasoline_price || 0).toFixed(2)}/L,
-            diesel is {currencySymbol}{(prices.diesel_price || 0).toFixed(2)}/L,
-            LPG is {currencySymbol}{(prices.lpg_price || 0).toFixed(2)}/L,
-            and electricity is {currencySymbol}{(prices.electric_price || 0).toFixed(2)}/kWh.
-            Electric vehicles typically offer the lowest per-kilometer cost, especially when charged at home.
+            {translate(currentLang, "faqA1", {
+              city: cityCap,
+              country: countryUpper,
+              currency: currencySymbol,
+              gasoline: (prices.gasoline_price || 0).toFixed(2),
+              diesel: (prices.diesel_price || 0).toFixed(2),
+              lpg: (prices.lpg_price || 0).toFixed(2),
+              electric: (prices.electric_price || 0).toFixed(2)
+            })}
           </p>
         </details>
 
         <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
           <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>How do fuel prices in {cityCap} compare to other cities?</span>
+            <span>{translate(currentLang, "faqQ2", { city: cityCap, country: countryUpper })}</span>
             <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
           </summary>
           <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            Our global comparison table shows fuel prices from 5 randomly selected cities worldwide,
-            with prices converted to {currencySymbol} for easy comparison. Fuel prices vary significantly
-            between countries due to taxes, subsidies, and supply chain differences.
-            Use the search bar to explore any of 48,000+ cities in our database.
+            {translate(currentLang, "faqA2", {
+              city: cityCap,
+              country: countryUpper,
+              currency: currencySymbol
+            })}
           </p>
         </details>
 
         <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
           <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>Which fuel has the lowest CO₂ emissions in {cityCap}?</span>
+            <span>{translate(currentLang, "faqQ3", { city: cityCap, country: countryUpper })}</span>
             <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
           </summary>
           <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            Electric vehicles produce the lowest CO₂ emissions per kilometer, especially when charged
-            with renewable energy. Among fossil fuels, LPG produces approximately 1.51 kg CO₂/L
-            (vs. 2.31 kg for gasoline and 2.68 kg for diesel). Our eco-score ranks each fuel type
-            with green leaves based on combined cost efficiency and carbon footprint.
+            {translate(currentLang, "faqA3", {
+              city: cityCap,
+              country: countryUpper
+            })}
           </p>
         </details>
 
         <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
           <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>How accurate and up-to-date are these fuel prices?</span>
+            <span>{translate(currentLang, "faqQ4", { city: cityCap, country: countryUpper })}</span>
             <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
           </summary>
           <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            Fuel prices are updated daily through our automated multi-source pipeline.
-            We aggregate data from official sources including Eurostat (EU), the U.S. Energy
-            Information Administration (EIA), and TheGlobalEconomy.com. Currency exchange
-            rates are refreshed in real-time to ensure accurate local price conversions.
+            {translate(currentLang, "faqA4", {
+              city: cityCap,
+              country: countryUpper
+            })}
           </p>
         </details>
       </div>

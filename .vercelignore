@@ -1,0 +1,10 @@
+my-fuel-site.zip
+*.zip
+.env.local
+.env
+scraper/
+.git/
+.github/
+node_modules/
+.next/
+README.md

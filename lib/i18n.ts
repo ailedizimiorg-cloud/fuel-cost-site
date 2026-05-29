@@ -83,7 +83,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faqQ1": "What is the cheapest fuel type in {city}, {country}?",
+    "faqA1": "Based on current prices in {city}, fuel costs vary significantly: Gasoline is {currency}{gasoline}/L, diesel is {currency}{diesel}/L, LPG is {currency}{lpg}/L, and electricity is {currency}{electric}/kWh. Electric vehicles typically offer the lowest per-kilometer cost, especially when charged at home.",
+    "faqQ2": "How do fuel prices in {city} compare to other cities?",
+    "faqA2": "Our global comparison table shows fuel prices from 5 randomly selected cities worldwide, with prices converted to {currency} for easy comparison. Fuel prices vary significantly between countries due to taxes, subsidies, and supply chain differences. Use the search bar to explore any of 48,000+ cities in our database.",
+    "faqQ3": "Which fuel has the lowest CO₂ emissions in {city}?",
+    "faqA3": "Electric vehicles produce the lowest CO₂ emissions per kilometer, especially when charged with renewable energy. Among fossil fuels, LPG produces approximately 1.51 kg CO₂/L (vs. 2.31 kg for gasoline and 2.68 kg for diesel). Our eco-score ranks each fuel type with green leaves based on combined cost efficiency and carbon footprint.",
+    "faqQ4": "How accurate and up-to-date are these fuel prices?",
+    "faqA4": "Fuel prices are updated daily through our automated multi-source pipeline. We aggregate data from official sources including Eurostat (EU), the U.S. Energy Information Administration (EIA), and TheGlobalEconomy.com. Currency exchange rates are refreshed in real-time to ensure accurate local price conversions.",
+
   },
   "tr": {
     "title": "{city}, {country} Güncel Akaryakıt Fiyatları - Rehber",
@@ -130,7 +140,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Litre",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "Sıkça Sorulan Sorular",
+    "faqQ1": "{city}, {country} şehrinde en ucuz yakıt türü hangisidir?",
+    "faqA1": "{city} şehrindeki güncel fiyatlara göre yakıt maliyetleri önemli ölçüde değişmektedir: Benzin {currency}{gasoline}/L, motorin {currency}{diesel}/L, LPG {currency}{lpg}/L ve elektrik {currency}{electric}/kWh. Elektrikli araçlar özellikle evde şarj edildiğinde genellikle kilometre başına en düşük maliyeti sunar.",
+    "faqQ2": "{city} şehrindeki yakıt fiyatları diğer şehirlerle karşılaştırıldığında nasıl?",
+    "faqA2": "Küresel karşılaştırma tablomuz, dünya genelinden rastgele seçilen 5 şehrin yakıt fiyatlarını {currency} cinsinden karşılaştırma imkanı sunar. Yakıt fiyatları ülkeler arasında vergiler, sübvansiyonlar ve tedarik zinciri farklılıkları nedeniyle önemli ölçüde değişir. 48.000\'den fazla şehri keşfetmek için arama çubuğunu kullanın.",
+    "faqQ3": "{city} şehrinde en düşük CO₂ salınımına sahip yakıt hangisidir?",
+    "faqA3": "Elektrikli araçlar özellikle yenilenebilir enerji ile şarj edildiğinde kilometre başına en düşük CO₂ salınımını üretir. Fosil yakıtlar arasında LPG yaklaşık 1.51 kg CO₂/L üretir (benzinde 2.31 kg, motorinde 2.68 kg). Eko-skorumuz, maliyet verimliliği ve karbon ayak izini birleştirerek her yakıt türünü yeşil yapraklarla sıralar.",
+    "faqQ4": "Bu yakıt fiyatları ne kadar doğru ve güncel?",
+    "faqA4": "Yakıt fiyatları, otomatik çok kaynaklı veri akışımız aracılığıyla günlük olarak güncellenir. Eurostat (AB), ABD Enerji Bilgi İdaresi (EIA) ve TheGlobalEconomy.com gibi resmi kaynaklardan veri toplarız. Döviz kurları, doğru yerel fiyat dönüşümleri sağlamak için gerçek zamanlı olarak yenilenir.",
+
   },
   "de": {
     "title": "Aktuelle Kraftstoffpreise in {city}, {country} - Ratgeber",
@@ -177,7 +197,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "Häufig gestellte Fragen",
+    "faqQ1": "Welche ist die günstigste Kraftstoffart in {city}, {country}?",
+    "faqA1": "Basierend auf den aktuellen Preisen in {city} variieren die Kraftstoffkosten erheblich: Benzin kostet {currency}{gasoline}/L, Diesel {currency}{diesel}/L, LPG {currency}{lpg}/L und Strom {currency}{electric}/kWh. Elektrofahrzeuge bieten in der Regel die niedrigsten Kosten pro Kilometer, insbesondere beim Laden zu Hause.",
+    "faqQ2": "Wie schneiden die Kraftstoffpreise in {city} im Vergleich zu anderen Städten ab?",
+    "faqA2": "Unsere globale Vergleichstabelle zeigt die Kraftstoffpreise von 5 zufällig ausgewählten Städten weltweit, mit Preisen umgerechnet in {currency}. Kraftstoffpreise variieren aufgrund von Steuern, Subventionen und Lieferkettenunterschieden stark zwischen den Ländern. Nutzen Sie die Suchleiste, um über 48.000 Städte in unserer Datenbank zu erkunden.",
+    "faqQ3": "Welcher Kraftstoff hat die niedrigsten CO₂-Emissionen in {city}?",
+    "faqA3": "Elektrofahrzeuge produzieren die niedrigsten CO₂-Emissionen pro Kilometer, besonders wenn sie mit erneuerbarer Energie geladen werden. Unter den fossilen Brennstoffen produziert LPG etwa 1,51 kg CO₂/L (vs. 2,31 kg für Benzin und 2,68 kg für Diesel). Unser Öko-Score bewertet jeden Kraftstofftyp mit grünen Blättern basierend auf Kosteneffizienz und CO₂-Fußabdruck.",
+    "faqQ4": "Wie genau und aktuell sind diese Kraftstoffpreise?",
+    "faqA4": "Die Kraftstoffpreise werden täglich über unsere automatisierte Multi-Source-Pipeline aktualisiert. Wir aggregieren Daten aus offiziellen Quellen wie Eurostat (EU), der U.S. Energy Information Administration (EIA) und TheGlobalEconomy.com. Die Wechselkurse werden in Echtzeit aktualisiert, um genaue lokale Preisumrechnungen zu gewährleisten.",
+
   },
   "fr": {
     "title": "Prix actuels des carburants à {city}, {country} - Guide",
@@ -224,7 +254,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Litre",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "Questions Fréquemment Posées",
+    "faqQ1": "Quel est le carburant le moins cher à {city}, {country} ?",
+    "faqA1": "Sur la base des prix actuels à {city}, les coûts de carburant varient considérablement : l\'essence est à {currency}{gasoline}/L, le diesel à {currency}{diesel}/L, le GPL à {currency}{lpg}/L et l\'électricité à {currency}{electric}/kWh. Les véhicules électriques offrent généralement le coût par kilomètre le plus bas, surtout lorsqu\'ils sont rechargés à domicile.",
+    "faqQ2": "Comment les prix du carburant à {city} se comparent-ils à d\'autres villes ?",
+    "faqA2": "Notre tableau comparatif mondial affiche les prix du carburant de 5 villes sélectionnées aléatoirement dans le monde, avec des prix convertis en {currency}. Les prix du carburant varient considérablement entre les pays en raison des taxes, des subventions et des différences de chaîne d\'approvisionnement. Utilisez la barre de recherche pour explorer plus de 48 000 villes de notre base de données.",
+    "faqQ3": "Quel carburant produit le moins d\'émissions de CO₂ à {city} ?",
+    "faqA3": "Les véhicules électriques produisent les plus faibles émissions de CO₂ par kilomètre, surtout lorsqu\'ils sont rechargés avec de l\'énergie renouvelable. Parmi les carburants fossiles, le GPL produit environ 1,51 kg de CO₂/L (contre 2,31 kg pour l\'essence et 2,68 kg pour le diesel). Notre éco-score classe chaque type de carburant avec des feuilles vertes en fonction de l\'efficacité des coûts et de l\'empreinte carbone.",
+    "faqQ4": "Quelle est la précision et l\'actualité de ces prix du carburant ?",
+    "faqA4": "Les prix du carburant sont mis à jour quotidiennement via notre pipeline automatisé multi-sources. Nous agrégeons les données de sources officielles telles qu\'Eurostat (UE), l\'U.S. Energy Information Administration (EIA) et TheGlobalEconomy.com. Les taux de change sont actualisés en temps réel pour garantir des conversions précises en monnaie locale.",
+
   },
   "es": {
     "title": "Precios actuales del combustible en {city}, {country} - Guía",
@@ -271,7 +311,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Litro",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "Preguntas Frecuentes",
+    "faqQ1": "¿Cuál es el combustible más barato en {city}, {country}?",
+    "faqA1": "Según los precios actuales en {city}, los costos de combustible varían significativamente: la gasolina cuesta {currency}{gasoline}/L, el diésel {currency}{diesel}/L, el GLP {currency}{lpg}/L y la electricidad {currency}{electric}/kWh. Los vehículos eléctricos suelen ofrecer el menor costo por kilómetro, especialmente cuando se cargan en casa.",
+    "faqQ2": "¿Cómo se comparan los precios de combustible en {city} con otras ciudades?",
+    "faqA2": "Nuestra tabla comparativa global muestra los precios de combustible de 5 ciudades seleccionadas aleatoriamente en todo el mundo, con precios convertidos a {currency}. Los precios del combustible varían significativamente entre países debido a impuestos, subsidios y diferencias en la cadena de suministro. Use la barra de búsqueda para explorar más de 48,000 ciudades en nuestra base de datos.",
+    "faqQ3": "¿Qué combustible tiene las menores emisiones de CO₂ en {city}?",
+    "faqA3": "Los vehículos eléctricos producen las menores emisiones de CO₂ por kilómetro, especialmente cuando se cargan con energía renovable. Entre los combustibles fósiles, el GLP produce aproximadamente 1.51 kg de CO₂/L (vs. 2.31 kg para gasolina y 2.68 kg para diésel). Nuestro eco-score clasifica cada tipo de combustible con hojas verdes basándose en la eficiencia de costos y la huella de carbono.",
+    "faqQ4": "¿Qué tan precisos y actualizados están estos precios de combustible?",
+    "faqA4": "Los precios de combustible se actualizan diariamente a través de nuestro pipeline automatizado de múltiples fuentes. Agregamos datos de fuentes oficiales como Eurostat (UE), la Administración de Información Energética de EE.UU. (EIA) y TheGlobalEconomy.com. Los tipos de cambio se actualizan en tiempo real para garantizar conversiones precisas de precios locales.",
+
   },
   "it": {
     "title": "Prezzi attuali del carburante a {city}, {country} - Guida",
@@ -318,7 +368,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Litro",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "Domande Frequenti",
+    "faqQ1": "Qual è il carburante più economico a {city}, {country}?",
+    "faqA1": "In base ai prezzi attuali a {city}, i costi del carburante variano notevolmente: la benzina costa {currency}{gasoline}/L, il diesel {currency}{diesel}/L, il GPL {currency}{lpg}/L e l\'elettricità {currency}{electric}/kWh. I veicoli elettrici offrono in genere il costo per chilometro più basso, specialmente se ricaricati a casa.",
+    "faqQ2": "Come si confrontano i prezzi del carburante a {city} con altre città?",
+    "faqA2": "La nostra tabella comparativa globale mostra i prezzi del carburante di 5 città selezionate casualmente in tutto il mondo, con prezzi convertiti in {currency}. I prezzi del carburante variano notevolmente tra i paesi a causa di tasse, sussidi e differenze nella catena di approvvigionamento. Usa la barra di ricerca per esplorare oltre 48.000 città nel nostro database.",
+    "faqQ3": "Quale carburante ha le minori emissioni di CO₂ a {city}?",
+    "faqA3": "I veicoli elettrici producono le minori emissioni di CO₂ per chilometro, specialmente se ricaricati con energia rinnovabile. Tra i carburanti fossili, il GPL produce circa 1,51 kg di CO₂/L (contro 2,31 kg per la benzina e 2,68 kg per il diesel). Il nostro eco-score classifica ogni tipo di carburante con foglie verdi in base all\'efficienza dei costi e all\'impronta di carbonio.",
+    "faqQ4": "Quanto sono accurati e aggiornati questi prezzi del carburante?",
+    "faqA4": "I prezzi del carburante vengono aggiornati quotidianamente attraverso il nostro pipeline automatizzato multi-fonte. Aggreghiamo dati da fonti ufficiali come Eurostat (UE), l\'Amministrazione per le Informazioni Energetiche degli Stati Uniti (EIA) e TheGlobalEconomy.com. I tassi di cambio vengono aggiornati in tempo reale per garantire conversioni accurate dei prezzi locali.",
+
   },
   "pt": {
     "title": "Preços atuais do combustível em {city}, {country} - Guia",
@@ -365,7 +425,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Litro",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "Perguntas Frequentes",
+    "faqQ1": "Qual é o combustível mais barato em {city}, {country}?",
+    "faqA1": "Com base nos preços atuais em {city}, os custos de combustível variam significativamente: gasolina está a {currency}{gasoline}/L, diesel a {currency}{diesel}/L, GPL a {currency}{lpg}/L e eletricidade a {currency}{electric}/kWh. Os veículos elétricos geralmente oferecem o menor custo por quilômetro, especialmente quando carregados em casa.",
+    "faqQ2": "Como os preços de combustível em {city} se comparam a outras cidades?",
+    "faqA2": "Nossa tabela comparativa global mostra os preços de combustível de 5 cidades selecionadas aleatoriamente em todo o mundo, com preços convertidos para {currency}. Os preços dos combustíveis variam significativamente entre os países devido a impostos, subsídios e diferenças na cadeia de suprimentos. Use a barra de pesquisa para explorar mais de 48.000 cidades em nosso banco de dados.",
+    "faqQ3": "Qual combustível tem as menores emissões de CO₂ em {city}?",
+    "faqA3": "Os veículos elétricos produzem as menores emissões de CO₂ por quilômetro, especialmente quando carregados com energia renovável. Entre os combustíveis fósseis, o GPL produz aproximadamente 1,51 kg de CO₂/L (contra 2,31 kg para gasolina e 2,68 kg para diesel). Nosso eco-score classifica cada tipo de combustível com folhas verdes com base na eficiência de custos e pegada de carbono.",
+    "faqQ4": "Quão precisos e atualizados são esses preços de combustível?",
+    "faqA4": "Os preços de combustível são atualizados diariamente através de nosso pipeline automatizado de múltiplas fontes. Agregamos dados de fontes oficiais, incluindo Eurostat (UE), a Administração de Informação de Energia dos EUA (EIA) e TheGlobalEconomy.com. As taxas de câmbio são atualizadas em tempo real para garantir conversões precisas de preços locais.",
+
   },
   "ru": {
     "title": "Текущие цены на топливо в {city}, {country} - Путеводитель",
@@ -412,7 +482,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "Литр",
       "kWh": "кВт·ч"
-    }
+    },
+    "faqTitle": "Часто задаваемые вопросы",
+    "faqQ1": "Какой тип топлива самый дешевый в {city}, {country}?",
+    "faqA1": "Согласно текущим ценам в {city}, стоимость топлива значительно варьируется: бензин — {currency}{gasoline}/л, дизель — {currency}{diesel}/л, СУГ — {currency}{lpg}/л, электричество — {currency}{electric}/кВт·ч. Электромобили обычно обеспечивают самую низкую стоимость за километр, особенно при зарядке дома.",
+    "faqQ2": "Как цены на топливо в {city} сравниваются с другими городами?",
+    "faqA2": "Наша глобальная таблица сравнения показывает цены на топливо из 5 случайно выбранных городов мира с ценами, конвертированными в {currency}. Цены на топливо значительно различаются между странами из-за налогов, субсидий и различий в цепочке поставок. Используйте строку поиска, чтобы изучить более 48 000 городов в нашей базе данных.",
+    "faqQ3": "Какое топливо имеет наименьшие выбросы CO₂ в {city}?",
+    "faqA3": "Электромобили производят наименьшие выбросы CO₂ на километр, особенно при зарядке возобновляемой энергией. Среди ископаемых видов топлива СУГ производит примерно 1,51 кг CO₂/л (против 2,31 кг для бензина и 2,68 кг для дизеля). Наш эко-рейтинг оценивает каждый тип топлива с помощью зеленых листьев на основе эффективности затрат и углеродного следа.",
+    "faqQ4": "Насколько точны и актуальны эти цены на топливо?",
+    "faqA4": "Цены на топливо обновляются ежедневно через наш автоматизированный мультисистемный конвейер. Мы собираем данные из официальных источников, включая Евростат (ЕС), Управление энергетической информации США (EIA) и TheGlobalEconomy.com. Курсы валют обновляются в реальном времени для обеспечения точных конвертаций местных цен.",
+
   },
   "zh": {
     "title": "{city}，{country} 当前燃料价格 - 指南",
@@ -459,7 +539,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "升",
       "kWh": "度"
-    }
+    },
+    "faqTitle": "常见问题",
+    "faqQ1": "{city}、{country} 最便宜的燃料类型是什么？",
+    "faqA1": "根据 {city} 的当前价格，燃料成本差异很大：汽油 {currency}{gasoline}/升，柴油 {currency}{diesel}/升，液化石油气 {currency}{lpg}/升，电力 {currency}{electric}/度。电动汽车通常每公里成本最低，特别是在家充电时。",
+    "faqQ2": "{city} 的燃料价格与其他城市相比如何？",
+    "faqA2": "我们的全球比较表显示了来自全球 5 个随机选择的城市的燃料价格，价格已转换为 {currency}。由于税收、补贴和供应链差异，各国之间的燃料价格差异很大。使用搜索栏探索数据库中超过 48,000 个城市。",
+    "faqQ3": "在 {city}，哪种燃料的 CO₂ 排放量最低？",
+    "faqA3": "电动汽车每公里的 CO₂ 排放量最低，尤其是使用可再生能源充电时。在化石燃料中，液化石油气每升约产生 1.51 千克 CO₂（汽油为 2.31 千克，柴油为 2.68 千克）。我们的环保评分根据成本效率和碳足迹，用绿叶对每种燃料类型进行排名。",
+    "faqQ4": "这些燃料价格的准确性和时效性如何？",
+    "faqA4": "燃料价格通过我们的自动化多源数据流每日更新。我们从官方来源汇总数据，包括欧盟统计局（EU）、美国能源信息署（EIA）和 TheGlobalEconomy.com。汇率实时刷新，以确保准确的本地价格转换。",
+
   },
   "ja": {
     "title": "{city}、{country}の現在の燃料価格 - ガイド",
@@ -506,7 +596,17 @@ export const translations: { [key: string]: any } = {
     "units": {
       "Liter": "リットル",
       "kWh": "kWh"
-    }
+    },
+    "faqTitle": "よくある質問",
+    "faqQ1": "{city}、{country} で最も安い燃料タイプは何ですか？",
+    "faqA1": "{city} の現在の価格に基づくと、燃料費は大きく異なります：ガソリンは {currency}{gasoline}/L、ディーゼルは {currency}{diesel}/L、LPGは {currency}{lpg}/L、電気は {currency}{electric}/kWh です。電気自動車は特に自宅充電の場合、通常キロメートルあたりのコストが最も低くなります。",
+    "faqQ2": "{city} の燃料価格は他の都市と比較してどうですか？",
+    "faqA2": "私たちのグローバル比較表は、世界中からランダムに選ばれた 5 都市の燃料価格を {currency} に変換して表示します。燃料価格は、税金、補助金、サプライチェーンの違いにより国によって大きく異なります。検索バーを使用してデータベース内の 48,000 以上の都市を探索してください。",
+    "faqQ3": "{city} で最も CO₂ 排出量が少ない燃料はどれですか？",
+    "faqA3": "電気自動車は、特に再生可能エネルギーで充電された場合、キロメートルあたりの CO₂ 排出量が最も少なくなります。化石燃料の中で、LPGは約1.51 kgのCO₂/Lを排出します（ガソリンは2.31 kg、ディーゼルは2.68 kg）。私たちのエコスコアは、コスト効率とカーボンフットプリントに基づいて、各燃料タイプを緑の葉でランク付けします。",
+    "faqQ4": "これらの燃料価格の正確さと最新性はどの程度ですか？",
+    "faqA4": "燃料価格は、自動化されたマルチソースパイプラインを通じて毎日更新されます。ユーロスタット（EU）、米国エネルギー情報局（EIA）、TheGlobalEconomy.comなどの公式ソースからデータを集約しています。正確な現地価格換算を保証するため、為替レートはリアルタイムで更新されます。",
+
   },
   "ko": {
     "title": "{city}, {country} 현재 연료 가격 - 안내",
