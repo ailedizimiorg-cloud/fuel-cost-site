@@ -900,12 +900,17 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
         {/* Right side: Fuel Cost Calculator / Route calculations */}
         <div className="md:col-span-5">
           <Card className="bg-white border border-[#e7e5e4] rounded-xl h-full shadow-md">
-            <CardHeader>
+            <CardHeader className="space-y-1">
               <CardTitle className="text-lg text-[#1c1917] font-semibold">
                 {mode === "simple"
                   ? translate(currentLang, "costEstimator")
                   : translate(currentLang, "routeCostSummary")}
               </CardTitle>
+              {mode === "simple" && (
+                <p className="text-xs text-[#78716c]">
+                  {translate(currentLang, "customizeDataHint")}
+                </p>
+              )}
             </CardHeader>
             <CardContent className="space-y-5">
               {mode === "simple" ? (
