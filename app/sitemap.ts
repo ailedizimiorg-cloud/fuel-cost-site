@@ -3,6 +3,8 @@ import { createAdminClient } from '@/lib/supabaseClient';
 import { countryToLanguage } from '@/lib/i18n';
 import { getLocalizedUrl, allLanguages } from '@/lib/route-translations';
 
+export const dynamic = 'force-dynamic';
+
 const CHUNK_SIZE = 10000;
 
 export async function generateSitemaps() {
