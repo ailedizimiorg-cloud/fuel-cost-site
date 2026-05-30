@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { getLocalizedUrl } from "@/lib/route-translations";
 
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -41,12 +42,13 @@ export default function LanguageSelector({ currentLang, citySlug }: LanguageSele
   const searchParams = useSearchParams();
 
   const handleLanguageChange = (lang: string) => {
-    // Path-based: /fuel-cost/[lang]/[city]
+    // Build localized URL using route translations
     // Preserve existing query params except old 'lang'
     const params = new URLSearchParams(searchParams.toString());
     params.delete("lang");
     const qs = params.toString();
-    router.push(`/fuel-cost/${lang}/${citySlug}${qs ? `?${qs}` : ""}`);
+    const localizedUrl = getLocalizedUrl(lang, citySlug) + (qs ? `?${qs}` : "");
+    router.push(localizedUrl);
   };
 
   return (

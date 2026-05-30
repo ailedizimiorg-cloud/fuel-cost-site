@@ -1,6 +1,8 @@
 // lib/seo-schema.ts
 // Schema.org JSON-LD generators for structured data
 
+import { getLocalizedUrl } from "@/lib/route-translations";
+
 export interface FuelPrices {
   gasoline_price?: number | null;
   diesel_price?: number | null;
@@ -30,7 +32,7 @@ export function generateBreadcrumbSchema(
         "@type": "ListItem",
         "position": 2,
         "name": `${city.charAt(0).toUpperCase() + city.slice(1)}, ${country.toUpperCase()}`,
-        "item": `${baseUrl}/fuel-cost/en/${city.toLowerCase()}`,
+        "item": `${baseUrl}${getLocalizedUrl("en", city.toLowerCase())}`,
       },
     ],
   };
@@ -52,7 +54,7 @@ export function generateProductSchemas(
 
   const currencySymbol = prices.currency_symbol || "$";
   const currencyCode = prices.currency_code || "USD";
-  const priceUrl = `${baseUrl}/fuel-cost/en/${city.toLowerCase()}`;
+  const priceUrl = `${baseUrl}${getLocalizedUrl("en", city.toLowerCase())}`;
 
   // Map our internal currency symbols to ISO codes for the schema
   const symbolToCode: Record<string, string> = {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CitySearch from "@/components/CitySearch";
+import { getLocalizedUrl } from "@/lib/route-translations";
 
 export default function Home() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function Home() {
       const res = await fetch("/api/location");
       const data = await res.json();
       if (data.country && data.city) {
-        router.push(`/fuel-cost/en/${data.city.toLowerCase()}`);
+        router.push(getLocalizedUrl("en", data.city.toLowerCase()));
       } else {
         setError("Could not detect location. Please use the search bar.");
         setDetecting(false);

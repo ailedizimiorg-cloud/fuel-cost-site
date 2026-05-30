@@ -1,5 +1,5 @@
 // app/fuel-cost/[lang]/[city]/page.tsx
-// Path-based language: /fuel-cost/en/istanbul (no more ?lang=xx)
+// Path-based language with localized slugs: /yakit-maliyeti/tr/istanbul (rewritten from middleware)
 import { getFuelPrices } from "@/lib/fuel-api";
 import { generateDescription, getComparisonData } from "@/lib/seo-utils";
 import {
@@ -15,12 +15,9 @@ import { notFound } from "next/navigation";
 import { translate } from "@/lib/i18n";
 import { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabaseClient";
+import { getLocalizedUrl, getLocalizedSegment, allLanguages, routeTranslations } from "@/lib/route-translations";
 
 const baseUrl = "https://fuelcost.info";
-const languagesList = [
-  "en","tr","de","fr","es","it","pt","ru","zh","ja","ko",
-  "nl","pl","ar","id","vi","hi","uk","ro","sv","no","da","fi","el","cs",
-];
 
 // Look up city globally by slug to get its country code
 async function findCityCountry(city: string): Promise<string | null> {
@@ -57,15 +54,15 @@ export async function generateMetadata({
     country: country.toUpperCase(),
   });
 
-  const canonicalUrl = `${baseUrl}/fuel-cost/${lang}/${city.toLowerCase()}`;
+  const canonicalUrl = `${baseUrl}${getLocalizedUrl(lang, city.toLowerCase())}`;
   // Remove the current lang from the list for alternates
-  const otherLangs = languagesList.filter(l => l !== lang);
+  const otherLangs = allLanguages.filter(l => l !== lang);
 
   const languageAlternates: Record<string, string> = {};
   otherLangs.forEach((l) => {
-    languageAlternates[l] = `${baseUrl}/fuel-cost/${l}/${city.toLowerCase()}`;
+    languageAlternates[l] = `${baseUrl}${getLocalizedUrl(l, city.toLowerCase())}`;
   });
-  languageAlternates["x-default"] = `${baseUrl}/fuel-cost/en/${city.toLowerCase()}`;
+  languageAlternates["x-default"] = `${baseUrl}${getLocalizedUrl("en", city.toLowerCase())}`;
 
   return {
     title: translatedTitle,
@@ -135,7 +132,7 @@ export default async function FuelPage({
 
   const cityCap = city.charAt(0).toUpperCase() + city.slice(1);
   const countryUpper = country.toUpperCase();
-  const canonicalUrl = `${baseUrl}/fuel-cost/${currentLang}/${city.toLowerCase()}`;
+  const canonicalUrl = `${baseUrl}${getLocalizedUrl(currentLang, city.toLowerCase())}`;
   const translatedTitle = translate(currentLang, "title", { city: cityCap, country: countryUpper });
 
   // Structured Data
@@ -197,7 +194,7 @@ export default async function FuelPage({
         <ol className="flex flex-wrap items-center gap-1.5 text-xs text-[#a8a29e] font-mono">
           <li><a href="/" className="hover:text-[#57534e] transition-colors">FuelCost.info</a></li>
           <li aria-hidden="true">/</li>
-          <li><a href={`/fuel-cost/${currentLang}/${city.toLowerCase()}`} className="hover:text-[#57534e] transition-colors">{countryUpper}</a></li>
+          <li><a href={getLocalizedUrl(currentLang, city.toLowerCase())} className="hover:text-[#57534e] transition-colors">{countryUpper}</a></li>
           <li aria-hidden="true">/</li>
           <li className="text-[#57534e] font-medium" aria-current="page">{cityCap}</li>
         </ol>
@@ -253,7 +250,7 @@ export default async function FuelPage({
           <tbody>
             {comparisons.map((c: ComparisonCity) => {
               const cityName = c.city.split(" (")[0].toLowerCase().replace(/\s+/g, "-");
-              const href = `/fuel-cost/${currentLang}/${cityName}`;
+              const href = getLocalizedUrl(currentLang, cityName);
               return (
                 <tr key={c.city} className="border-t border-[#e7e5e4] hover:bg-[#faf9f6]/80 transition-colors">
                   <td className="p-4 text-[#44403c]">
@@ -285,7 +282,7 @@ export default async function FuelPage({
             {relatedCities.map((c: ComparisonCity) => {
               const cityName = c.city.split(" (")[0].toLowerCase().replace(/\s+/g, "-");
               return (
-                <a key={c.city} href={`/fuel-cost/${currentLang}/${cityName}`}
+                <a key={c.city} href={getLocalizedUrl(currentLang, cityName)}
                   className="block bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-4 hover:bg-[#f5f4f0] hover:border-[#d6d3d1] transition-all">
                   <div className="font-medium text-[#1c1917]">{c.city}</div>
                   <div className="text-xs text-[#a8a29e] mt-1 font-mono">

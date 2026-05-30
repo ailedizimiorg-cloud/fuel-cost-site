@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { createAdminClient } from '@/lib/supabaseClient';
 import { countryToLanguage } from '@/lib/i18n';
+import { getLocalizedUrl, allLanguages } from '@/lib/route-translations';
 
 const CHUNK_SIZE = 10000;
 
@@ -36,20 +37,18 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
   }
 
   const baseUrl = "https://fuelcost.info";
-  const languagesList = ['en', 'tr', 'de', 'fr', 'es', 'it', 'pt', 'ru', 'zh', 'ja', 'ko',
-    'nl', 'pl', 'ar', 'id', 'vi', 'hi', 'uk', 'ro', 'sv', 'no', 'da', 'fi', 'el', 'cs'];
   const today = new Date();
 
   return cities.map((city) => {
     const cityLower = city.slug.toLowerCase();
     const country = city.country_code;
     const defaultLang = countryToLanguage[country.toUpperCase()] || country.toLowerCase();
-    const canonicalUrl = `${baseUrl}/fuel-cost/${defaultLang}/${cityLower}`;
+    const canonicalUrl = `${baseUrl}${getLocalizedUrl(defaultLang, cityLower)}`;
 
-    // Path-based hreflang alternates (no more ?lang=xx)
+    // Path-based hreflang alternates using localized slugs
     const alternates: { [key: string]: string } = {};
-    languagesList.forEach((lang) => {
-      alternates[lang] = `${baseUrl}/fuel-cost/${lang}/${cityLower}`;
+    allLanguages.forEach((lang) => {
+      alternates[lang] = `${baseUrl}${getLocalizedUrl(lang, cityLower)}`;
     });
 
     return {
