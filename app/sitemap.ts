@@ -29,9 +29,10 @@ export async function generateSitemaps() {
   return Array.from({ length: sitemapsCount }, (_, i) => ({ id: i }));
 }
 
-export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap({ id }: { id: number | Promise<number> }): Promise<MetadataRoute.Sitemap> {
+  const resolvedId = await id;
   const supabase = getSupabase();
-  const start = id * CHUNK_SIZE;
+  const start = resolvedId * CHUNK_SIZE;
   const end = start + CHUNK_SIZE - 1;
 
   try {
@@ -41,10 +42,10 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
       .order('id', { ascending: true })
       .range(start, end);
 
-    console.log(`[sitemap ${id}] cities count:`, cities?.length, 'error:', error);
+    console.log(`[sitemap ${resolvedId}] cities count:`, cities?.length, 'start-end:', start, end, 'error:', error);
 
     if (error || !cities || cities.length === 0) {
-      console.error(`Error fetching cities for sitemap chunk ${id}:`, error);
+      console.error(`Error fetching cities for sitemap chunk ${resolvedId}:`, error, 'start:', start, 'end:', end);
       return [];
     }
 
@@ -73,7 +74,7 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
         };
       });
   } catch (err) {
-    console.error(`[sitemap ${id}] Unexpected error:`, err);
+    console.error(`[sitemap ${resolvedId}] Unexpected error:`, err);
     return [];
   }
 }
