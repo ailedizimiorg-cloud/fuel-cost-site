@@ -32,17 +32,21 @@ const languages = [
 
 interface LanguageSelectorProps {
   currentLang: string;
+  citySlug: string;
 }
 
-export default function LanguageSelector({ currentLang }: LanguageSelectorProps) {
+export default function LanguageSelector({ currentLang, citySlug }: LanguageSelectorProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleLanguageChange = (lang: string) => {
+    // Path-based: /fuel-cost/[lang]/[city]
+    // Preserve existing query params except old 'lang'
     const params = new URLSearchParams(searchParams.toString());
-    params.set("lang", lang);
-    router.push(`${pathname}?${params.toString()}`);
+    params.delete("lang");
+    const qs = params.toString();
+    router.push(`/fuel-cost/${lang}/${citySlug}${qs ? `?${qs}` : ""}`);
   };
 
   return (

@@ -67,7 +67,7 @@ export default function CitySearch({ lang, className = "" }: CitySearchProps) {
     setResults([]);
     setIsOpen(false);
     // Navigate to city
-    router.push(`/fuel-cost/${city.country_code.toLowerCase()}/${city.slug.toLowerCase()}?lang=${lang}`);
+    router.push(`/fuel-cost/${lang}/${city.slug.toLowerCase()}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

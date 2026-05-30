@@ -1,6 +1,7 @@
-// app/fuel-cost/[country]/[city]/page.tsx
-import { getFuelPrices, getComparisonData } from "@/lib/fuel-api";
-import { generateDescription } from "@/lib/seo-utils";
+// app/fuel-cost/[lang]/[city]/page.tsx
+// Path-based language: /fuel-cost/en/istanbul (no more ?lang=xx)
+import { getFuelPrices } from "@/lib/fuel-api";
+import { generateDescription, getComparisonData } from "@/lib/seo-utils";
 import {
   generateBreadcrumbSchema,
   generateProductSchemas,
@@ -11,60 +12,64 @@ import Calculator from "@/components/Calculator";
 import LanguageSelector from "@/components/LanguageSelector";
 import CitySearch from "@/components/CitySearch";
 import { notFound } from "next/navigation";
-import { translate, getLanguage, getLanguageFromHeaders } from "@/lib/i18n";
+import { translate } from "@/lib/i18n";
 import { Metadata } from "next";
-import { headers } from "next/headers";
+import { createAdminClient } from "@/lib/supabaseClient";
+
+const baseUrl = "https://fuelcost.info";
+const languagesList = [
+  "en","tr","de","fr","es","it","pt","ru","zh","ja","ko",
+  "nl","pl","ar","id","vi","hi","uk","ro","sv","no","da","fi","el","cs",
+];
+
+// Look up city globally by slug to get its country code
+async function findCityCountry(city: string): Promise<string | null> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('cities')
+    .select('country_code')
+    .eq('slug', city.toLowerCase())
+    .limit(1)
+    .single();
+  if (error || !data) return null;
+  return data.country_code;
+}
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: {
-  params: Promise<{ country: string; city: string }>;
-  searchParams: Promise<{ lang?: string }>;
+  params: Promise<{ lang: string; city: string }>;
 }): Promise<Metadata> {
-  const { country, city } = await params;
-  const { lang } = await searchParams;
+  const { lang, city } = await params;
+  const country = await findCityCountry(city);
+  if (!country) return { title: "Fuel Prices Tracker" };
 
   const prices = await getFuelPrices(country, city);
-  if (!prices) {
-    return { title: "Fuel Prices Tracker" };
-  }
+  if (!prices) return { title: "Fuel Prices Tracker" };
 
-  const headerList = await headers();
-  const acceptLanguage = headerList.get("accept-language") || "";
-  const vercelCountry = headerList.get("x-vercel-ip-country") || "";
-  const detectedLang = getLanguageFromHeaders(acceptLanguage, vercelCountry);
-  const currentLang = lang || detectedLang || getLanguage(country);
   const primaryPrice =
-    prices.gasoline_price ||
-    prices.diesel_price ||
-    prices.lpg_price ||
-    prices.electric_price ||
-    0;
+    prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
   const currencySymbol = prices.currency_symbol || prices.currency || "$";
-  const description = generateDescription(
-    city, primaryPrice, currencySymbol, country, currentLang
-  );
+  const description = generateDescription(city, primaryPrice, currencySymbol, country, lang);
 
-  const translatedTitle = translate(currentLang, "title", {
+  const translatedTitle = translate(lang, "title", {
     city: city.charAt(0).toUpperCase() + city.slice(1),
     country: country.toUpperCase(),
   });
 
-  const baseUrl = "https://fuelcost.info";
-  const canonicalUrl = `${baseUrl}/fuel-cost/${country}/${city}`;
+  const canonicalUrl = `${baseUrl}/fuel-cost/${lang}/${city.toLowerCase()}`;
+  // Remove the current lang from the list for alternates
+  const otherLangs = languagesList.filter(l => l !== lang);
 
-  const languagesList = [
-    "en","tr","de","fr","es","it","pt","ru","zh","ja","ko",
-    "nl","pl","ar","id","vi","hi","uk","ro","sv","no","da","fi","el","cs",
-  ];
   const languageAlternates: Record<string, string> = {};
-  languagesList.forEach((l) => { languageAlternates[l] = `${canonicalUrl}?lang=${l}`; });
-  languageAlternates["x-default"] = canonicalUrl;
+  otherLangs.forEach((l) => {
+    languageAlternates[l] = `${baseUrl}/fuel-cost/${l}/${city.toLowerCase()}`;
+  });
+  languageAlternates["x-default"] = `${baseUrl}/fuel-cost/en/${city.toLowerCase()}`;
 
   return {
     title: translatedTitle,
-    description: description,
+    description,
     keywords: [
       `${city.toLowerCase()} fuel prices`,
       `${country.toUpperCase()} fuel prices`,
@@ -74,21 +79,17 @@ export async function generateMetadata({
     alternates: { canonical: canonicalUrl, languages: languageAlternates },
     openGraph: {
       title: translatedTitle,
-      description: description,
+      description,
       url: canonicalUrl,
       siteName: "FuelCost.info",
-      locale: currentLang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : `${lang}_${lang.toUpperCase()}`,
       type: "website",
-      images: [{
-        url: `${baseUrl}/og-image.png`,
-        width: 1200, height: 630,
-        alt: `${translatedTitle} - FuelCost.info`,
-      }],
+      images: [{ url: `${baseUrl}/og-image.png`, width: 1200, height: 630, alt: `${translatedTitle} - FuelCost.info` }],
     },
     twitter: {
       card: "summary_large_image",
       title: translatedTitle,
-      description: description,
+      description,
       images: [`${baseUrl}/og-image.png`],
     },
   };
@@ -104,41 +105,28 @@ interface ComparisonCity {
 
 export default async function FuelPage({
   params,
-  searchParams,
 }: {
-  params: Promise<{ country: string; city: string }>;
-  searchParams: Promise<{ lang?: string }>;
+  params: Promise<{ lang: string; city: string }>;
 }) {
-  const { country, city } = await params;
-  const { lang } = await searchParams;
+  const { lang, city } = await params;
+
+  // Find country from city slug
+  const country = await findCityCountry(city);
+  if (!country) notFound();
 
   const prices = await getFuelPrices(country, city);
-
   const hasPrices =
     prices &&
-    (prices.gasoline_price != null ||
-     prices.diesel_price != null ||
-     prices.lpg_price != null ||
-     prices.electric_price != null);
-
+    (prices.gasoline_price != null || prices.diesel_price != null ||
+     prices.lpg_price != null || prices.electric_price != null);
   if (!hasPrices) notFound();
 
-  const headerList = await headers();
-  const acceptLanguage = headerList.get("accept-language") || "";
-  const vercelCountry = headerList.get("x-vercel-ip-country") || "";
-  const detectedLang = getLanguageFromHeaders(acceptLanguage, vercelCountry);
-  const currentLang = lang || detectedLang || getLanguage(country);
+  const currentLang = lang;
 
   const primaryPrice =
-    prices.gasoline_price ||
-    prices.diesel_price ||
-    prices.lpg_price ||
-    prices.electric_price ||
-    0;
+    prices.gasoline_price || prices.diesel_price || prices.lpg_price || prices.electric_price || 0;
   const currencySymbol = prices.currency_symbol || prices.currency || "$";
-  const description = generateDescription(
-    city, primaryPrice, currencySymbol, country, currentLang
-  );
+  const description = generateDescription(city, primaryPrice, currencySymbol, country, currentLang);
   const comparisons: ComparisonCity[] = await getComparisonData(
     city, country,
     prices.currency_code || undefined,
@@ -147,14 +135,12 @@ export default async function FuelPage({
 
   const cityCap = city.charAt(0).toUpperCase() + city.slice(1);
   const countryUpper = country.toUpperCase();
-  const baseUrl = "https://fuelcost.info";
-  const canonicalUrl = `${baseUrl}/fuel-cost/${country}/${city}`;
+  const canonicalUrl = `${baseUrl}/fuel-cost/${currentLang}/${city.toLowerCase()}`;
   const translatedTitle = translate(currentLang, "title", { city: cityCap, country: countryUpper });
-  const translatedQuestion = translate(currentLang, "question", { city: cityCap });
 
-  // Structured Data (JSON-LD)
-  const breadcrumbSchema = generateBreadcrumbSchema(country, city);
-  const productSchemas = generateProductSchemas(city, country, prices);
+  // Structured Data
+  const breadcrumbSchema = generateBreadcrumbSchema(country, city, baseUrl);
+  const productSchemas = generateProductSchemas(city, country, prices, baseUrl);
   const faqSchema = generateMultiFaqSchema([
     {
       question: translate(currentLang, "faqQ1", { city: cityCap, country: countryUpper }),
@@ -179,10 +165,8 @@ export default async function FuelPage({
     canonicalUrl
   );
 
-  // Build related cities internal links (first 5)
   const relatedCities = comparisons.slice(0, 5).filter(Boolean);
 
-  // Determine available fuel types for this city
   const ft: { key: string; label: string }[] = [];
   const ftLabels: Record<string, string> = (translate(currentLang, "fuelTypes") || {}) as Record<string, string>;
   if (prices.gasoline_price != null && prices.gasoline_price > 0)
@@ -208,44 +192,36 @@ export default async function FuelPage({
       <script type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
 
-      {/* Breadcrumb Navigation */}
+      {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-4">
         <ol className="flex flex-wrap items-center gap-1.5 text-xs text-[#a8a29e] font-mono">
-          <li>
-            <a href="/" className="hover:text-[#57534e] transition-colors">FuelCost.info</a>
-          </li>
+          <li><a href="/" className="hover:text-[#57534e] transition-colors">FuelCost.info</a></li>
           <li aria-hidden="true">/</li>
-          <li>
-            <a href={`/fuel-cost/${country.toLowerCase()}`}
-              className="hover:text-[#57534e] transition-colors">{countryUpper}</a>
-          </li>
+          <li><a href={`/fuel-cost/${currentLang}/${city.toLowerCase()}`} className="hover:text-[#57534e] transition-colors">{countryUpper}</a></li>
           <li aria-hidden="true">/</li>
           <li className="text-[#57534e] font-medium" aria-current="page">{cityCap}</li>
         </ol>
       </nav>
 
-      {/* Header: Search + Language */}
+      {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-[#e7e5e4] pb-6">
         <div className="w-full">
           <CitySearch lang={currentLang} className="w-full md:max-w-xs" />
         </div>
         <div className="flex-shrink-0">
-          <LanguageSelector currentLang={currentLang} />
+          <LanguageSelector currentLang={currentLang} citySlug={city.toLowerCase()} />
         </div>
       </div>
 
-      {/* H1 Title */}
+      {/* H1 */}
       <h1 className="text-4xl md:text-5xl font-semibold tracking-[-2.4px] mb-6 text-[#1c1917]">
         {translatedTitle}
       </h1>
 
-      {/* SEO Description */}
       <p className="text-base text-[#57534e] mb-8 leading-relaxed">{description}</p>
 
-      {/* Calculator */}
       <Calculator initialPrices={prices} countryCode={country} lang={currentLang} />
 
-      {/* H2: Fuel Type Overview */}
       <h2 className="text-2xl font-semibold mt-16 mb-4 text-[#1c1917]">
         {translate(currentLang, "priceComparisons") || "Fuel Type Comparison"}
       </h2>
@@ -257,10 +233,9 @@ export default async function FuelPage({
           </span>
         ))}.
         Each fuel type has different costs, efficiency, and environmental impact.
-        Use the calculator above to estimate driving costs based on your distance and consumption.
       </p>
 
-      {/* H2: Price Comparisons Table */}
+      {/* Price Comparisons Table */}
       <h2 className="text-2xl font-semibold mt-12 mb-6 text-[#1c1917]">
         {translate(currentLang, "priceComparisons")}
       </h2>
@@ -278,8 +253,7 @@ export default async function FuelPage({
           <tbody>
             {comparisons.map((c: ComparisonCity) => {
               const cityName = c.city.split(" (")[0].toLowerCase().replace(/\s+/g, "-");
-              const countryCode = c.city.match(/\(([^)]+)\)$/)?.[1]?.toLowerCase() || "";
-              const href = `/fuel-cost/${countryCode}/${cityName}`;
+              const href = `/fuel-cost/${currentLang}/${cityName}`;
               return (
                 <tr key={c.city} className="border-t border-[#e7e5e4] hover:bg-[#faf9f6]/80 transition-colors">
                   <td className="p-4 text-[#44403c]">
@@ -298,7 +272,7 @@ export default async function FuelPage({
         </table>
       </div>
 
-      {/* Related Cities - Internal Links */}
+      {/* Related Cities */}
       {relatedCities.length > 0 && (
         <>
           <h2 className="text-2xl font-semibold mt-16 mb-6 text-[#1c1917]">
@@ -310,9 +284,8 @@ export default async function FuelPage({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             {relatedCities.map((c: ComparisonCity) => {
               const cityName = c.city.split(" (")[0].toLowerCase().replace(/\s+/g, "-");
-              const countryCode = c.city.match(/\(([^)]+)\)$/)?.[1]?.toLowerCase() || "";
               return (
-                <a key={c.city} href={`/fuel-cost/${countryCode}/${cityName}`}
+                <a key={c.city} href={`/fuel-cost/${currentLang}/${cityName}`}
                   className="block bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-4 hover:bg-[#f5f4f0] hover:border-[#d6d3d1] transition-all">
                   <div className="font-medium text-[#1c1917]">{c.city}</div>
                   <div className="text-xs text-[#a8a29e] mt-1 font-mono">
@@ -325,68 +298,32 @@ export default async function FuelPage({
         </>
       )}
 
-      {/* FAQ Section */}
+      {/* FAQ */}
       <h2 className="text-2xl font-semibold mt-12 mb-6 text-[#1c1917]">
         {translate(currentLang, "faqTitle") || "Frequently Asked Questions"}
       </h2>
       <div className="space-y-4 mb-12">
-        <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
-          <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>{translate(currentLang, "faqQ1", { city: cityCap, country: countryUpper })}</span>
-            <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            {translate(currentLang, "faqA1", {
-              city: cityCap,
-              country: countryUpper,
-              currency: currencySymbol,
-              gasoline: (prices.gasoline_price || 0).toFixed(2),
-              diesel: (prices.diesel_price || 0).toFixed(2),
-              lpg: (prices.lpg_price || 0).toFixed(2),
-              electric: (prices.electric_price || 0).toFixed(2)
-            })}
-          </p>
-        </details>
-
-        <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
-          <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>{translate(currentLang, "faqQ2", { city: cityCap, country: countryUpper })}</span>
-            <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            {translate(currentLang, "faqA2", {
-              city: cityCap,
-              country: countryUpper,
-              currency: currencySymbol
-            })}
-          </p>
-        </details>
-
-        <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
-          <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>{translate(currentLang, "faqQ3", { city: cityCap, country: countryUpper })}</span>
-            <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            {translate(currentLang, "faqA3", {
-              city: cityCap,
-              country: countryUpper
-            })}
-          </p>
-        </details>
-
-        <details className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
-          <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
-            <span>{translate(currentLang, "faqQ4", { city: cityCap, country: countryUpper })}</span>
-            <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <p className="mt-3 text-[#57534e] text-sm leading-relaxed">
-            {translate(currentLang, "faqA4", {
-              city: cityCap,
-              country: countryUpper
-            })}
-          </p>
-        </details>
+        {["faqQ1","faqQ2","faqQ3","faqQ4"].map((qKey, idx) => {
+          const aKey = `faqA${idx + 1}`;
+          const q = translate(currentLang, qKey, { city: cityCap, country: countryUpper });
+          const a = translate(currentLang, aKey, {
+            city: cityCap, country: countryUpper,
+            currency: currencySymbol,
+            gasoline: (prices.gasoline_price || 0).toFixed(2),
+            diesel: (prices.diesel_price || 0).toFixed(2),
+            lpg: (prices.lpg_price || 0).toFixed(2),
+            electric: (prices.electric_price || 0).toFixed(2),
+          });
+          return (
+            <details key={qKey} className="group bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-5 open:bg-white transition-all">
+              <summary className="font-semibold text-[#1c1917] cursor-pointer list-none flex items-center justify-between">
+                <span>{q}</span>
+                <span className="text-[#a8a29e] group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-3 text-[#57534e] text-sm leading-relaxed">{a}</p>
+            </details>
+          );
+        })}
       </div>
     </div>
   );

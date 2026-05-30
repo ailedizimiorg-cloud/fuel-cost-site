@@ -16,7 +16,7 @@ export default function Home() {
       const res = await fetch("/api/location");
       const data = await res.json();
       if (data.country && data.city) {
-        router.push(`/fuel-cost/${data.country.toLowerCase()}/${data.city.toLowerCase()}`);
+        router.push(`/fuel-cost/en/${data.city.toLowerCase()}`);
       } else {
         setError("Could not detect location. Please use the search bar.");
         setDetecting(false);

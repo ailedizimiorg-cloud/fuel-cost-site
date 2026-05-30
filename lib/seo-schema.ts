@@ -29,14 +29,8 @@ export function generateBreadcrumbSchema(
       {
         "@type": "ListItem",
         "position": 2,
-        "name": `Fuel Prices in ${country.toUpperCase()}`,
-        "item": `${baseUrl}/fuel-cost/${country.toLowerCase()}`,
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": `${city.charAt(0).toUpperCase() + city.slice(1)}`,
-        "item": `${baseUrl}/fuel-cost/${country.toLowerCase()}/${city.toLowerCase()}`,
+        "name": `${city.charAt(0).toUpperCase() + city.slice(1)}, ${country.toUpperCase()}`,
+        "item": `${baseUrl}/fuel-cost/en/${city.toLowerCase()}`,
       },
     ],
   };
@@ -58,7 +52,7 @@ export function generateProductSchemas(
 
   const currencySymbol = prices.currency_symbol || "$";
   const currencyCode = prices.currency_code || "USD";
-  const priceUrl = `${baseUrl}/fuel-cost/${country.toLowerCase()}/${city.toLowerCase()}`;
+  const priceUrl = `${baseUrl}/fuel-cost/en/${city.toLowerCase()}`;
 
   // Map our internal currency symbols to ISO codes for the schema
   const symbolToCode: Record<string, string> = {
