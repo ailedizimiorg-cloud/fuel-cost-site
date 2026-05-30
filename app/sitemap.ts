@@ -41,7 +41,9 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
   const baseUrl = "https://fuelcost.info";
   const today = new Date();
 
-  return cities.map((city) => {
+  return cities
+    .filter((city: any) => city.slug && city.country_code)
+    .map((city: any) => {
     const cityLower = city.slug.toLowerCase();
     const country = city.country_code;
     const defaultLang = countryToLanguage[country.toUpperCase()] || country.toLowerCase();
