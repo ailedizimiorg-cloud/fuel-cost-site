@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { createAdminClient } from '@/lib/supabaseClient';
+import { createClient } from '@/lib/supabaseClient';
 import { countryToLanguage } from '@/lib/i18n';
 import { getLocalizedUrl, allLanguages } from '@/lib/route-translations';
 
@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 const CHUNK_SIZE = 10000;
 
 export async function generateSitemaps() {
-  const supabase = createAdminClient();
+  const supabase = createClient();
   const { count, error } = await supabase
     .from('cities')
     .select('*', { count: 'exact', head: true });
@@ -23,7 +23,7 @@ export async function generateSitemaps() {
 }
 
 export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
-  const supabase = createAdminClient();
+  const supabase = createClient();
   const start = id * CHUNK_SIZE;
   const end = start + CHUNK_SIZE - 1;
 
