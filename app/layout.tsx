@@ -60,6 +60,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;600&display=swap" rel="stylesheet" />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3572134692687784" crossOrigin="anonymous"></script>
       </head>
       <body className="font-sans text-[#171717] bg-[#ffffff] min-h-screen flex flex-col">
         <nav className="p-6 border-b border-[#ebebeb] flex justify-between items-center">
