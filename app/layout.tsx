@@ -67,6 +67,7 @@ export default function RootLayout({
           <span className="font-semibold text-lg">FuelCost.info</span>
           <div className="space-x-4 text-sm font-medium">
             <a href="/">Home</a>
+            <a href="/blog">Blog</a>
             <a href="/about">About</a>
           </div>
         </nav>
