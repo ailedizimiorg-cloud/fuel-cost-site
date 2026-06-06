@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: "Our privacy policy covering data collection, cookies, and your rights.",
     url: "https://fuelcost.info/privacy",
     type: "website",
+    images: [{ url: "https://fuelcost.info/og-image.png", width: 1200, height: 630, alt: "FuelCost.info" }],
   },
 };
 

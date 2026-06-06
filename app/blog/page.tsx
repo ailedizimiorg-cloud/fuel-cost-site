@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     description: "Expert analysis on global fuel prices, energy market trends, EV charging costs, and money-saving tips.",
     url: "https://fuelcost.info/blog",
     type: "website",
+    images: [{ url: "https://fuelcost.info/og-image.png", width: 1200, height: 630, alt: "FuelCost.info Blog" }],
   },
 };
 

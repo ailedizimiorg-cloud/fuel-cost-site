@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: "Our terms of service covering acceptable use, disclaimers, and liability.",
     url: "https://fuelcost.info/terms",
     type: "website",
+    images: [{ url: "https://fuelcost.info/og-image.png", width: 1200, height: 630, alt: "FuelCost.info" }],
   },
 };
 

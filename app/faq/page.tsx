@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: "Answers to common questions about fuel prices, data sources, and using FuelCost.info.",
     url: "https://fuelcost.info/faq",
     type: "website",
+    images: [{ url: "https://fuelcost.info/og-image.png", width: 1200, height: 630, alt: "FuelCost.info" }],
   },
 };
 

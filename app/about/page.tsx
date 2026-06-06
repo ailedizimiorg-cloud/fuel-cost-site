@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description: "Learn about our data sources, methodology, and mission to make fuel pricing transparent worldwide.",
     url: "https://fuelcost.info/about",
     type: "website",
+    images: [{ url: "https://fuelcost.info/og-image.png", width: 1200, height: 630, alt: "FuelCost.info" }],
   },
 };
 
