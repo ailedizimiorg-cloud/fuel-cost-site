@@ -122,6 +122,11 @@ export const translations: { [key: string]: any } = {
     "electricAC": "Electricity (AC Fast Charging) ⚡",
     "electricDC": "Electricity (DC Fast Charging) 🔋",
 
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "sitemap": "Sitemap",
   },
   "tr": {
     "title": "{city}, {country} Güncel Akaryakıt Fiyatları - Rehber",
