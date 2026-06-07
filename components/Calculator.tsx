@@ -661,7 +661,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                 : "text-[#78716c] hover:text-[#1c1917]"
             }`}
           >
-            {currentLang === "tr" ? "Metrik (Km, L) 🌍" : "Metric (Km, L) 🌍"}
+            {translate(currentLang, "metric")}
           </button>
           <button
             onClick={() => setUnitSystem("imperial")}
