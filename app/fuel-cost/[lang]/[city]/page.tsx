@@ -223,13 +223,14 @@ export default async function FuelPage({
         {translate(currentLang, "priceComparisons") || "Fuel Type Comparison"}
       </h2>
       <p className="text-sm text-[#57534e] mb-6 leading-relaxed">
-        {cityCap} offers {ft.map((f, i) => (
-          <span key={f.key}>
-            {i > 0 && i === ft.length - 1 ? " and " : i > 0 ? ", " : ""}
-            {f.label}
-          </span>
-        ))}.
-        Each fuel type has different costs, efficiency, and environmental impact.
+        {translate(currentLang, "offersDesc", {
+          city: cityCap,
+          fuelList: ft.map((f, i) => {
+            if (i === 0) return f.label;
+            if (i === ft.length - 1) return translate(currentLang, "and") + f.label;
+            return ", " + f.label;
+          }).join("")
+        })}
       </p>
 
       {/* Price Comparisons Table */}
@@ -273,10 +274,10 @@ export default async function FuelPage({
       {relatedCities.length > 0 && (
         <>
           <h2 className="text-2xl font-semibold mt-16 mb-6 text-[#1c1917]">
-            {translate(currentLang, "priceComparisons")} — Related Cities
+            {translate(currentLang, "priceComparisons")} — {translate(currentLang, "relatedCities")}
           </h2>
           <p className="text-sm text-[#57534e] mb-6 leading-relaxed">
-            Compare fuel prices in {cityCap} with other cities around the world:
+            {translate(currentLang, "compareDesc", { city: cityCap })}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             {relatedCities.map((c: ComparisonCity) => {

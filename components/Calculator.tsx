@@ -671,7 +671,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                 : "text-[#78716c] hover:text-[#1c1917]"
             }`}
           >
-            {currentLang === "tr" ? "İmparatorluk (Mil, Gal) 👑" : "Imperial (Miles, Gal) 👑"}
+            {translate(currentLang, "imperial")}
           </button>
         </div>
       </div>
@@ -1158,9 +1158,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                 <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-100 text-xs font-semibold shadow-sm">
                   <span>🍃</span>
                   <span>
-                    {currentLang === "tr"
-                      ? "En Ucuz & En Doğa Dostu Yakıt En Fazla Yaprağı Alır"
-                      : "Cheapest & Eco-friendliest Fuel Gets Most Leaves"}
+                    {translate(currentLang, "ecoHint")}
                   </span>
                 </div>
               </div>
@@ -1170,16 +1168,16 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                   <thead>
                     <tr className="border-b border-[#e7e5e4] text-xs font-semibold uppercase tracking-wider text-[#78716c]">
                       <th className="py-3 px-4">
-                        {currentLang === "tr" ? "Yakıt Türü" : "Fuel Type"}
+                        {translate(currentLang, "fuelTypeCol")}
                       </th>
                       <th className="py-3 px-4">
                         {translate(currentLang, "price")}
                       </th>
                       <th className="py-3 px-4">
-                        {currentLang === "tr" ? "Tüketim" : "Consumption"}
+                        {translate(currentLang, "consumptionCol")}
                       </th>
                       <th className="py-3 px-4">
-                        {currentLang === "tr" ? "Maliyet" : "Cost"}
+                        {translate(currentLang, "costCol")}
                       </th>
                       <th className="py-3 px-4">
                         {translate(currentLang, "co2Emission")}
@@ -1204,7 +1202,7 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
                             {getFuelTypeLabel(fuel.key)}
                             {isSelected && (
                               <span className="text-[10px] bg-white/90 text-[#1c1917] border border-stone-200/60 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
-                                {currentLang === "tr" ? "Aktif" : "Active"}
+                                {translate(currentLang, "activeFuel")}
                               </span>
                             )}
                           </td>
