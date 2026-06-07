@@ -1,6 +1,8 @@
 
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
+import { translate, getLanguageFromHeaders } from "@/lib/i18n";
 import "./globals.css";
 
 const websiteSchema = {
@@ -97,13 +99,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Detect language from request headers
+  const headersList = await headers();
+  const acceptLanguage = headersList.get("accept-language") || "en";
+  const vercelCountry = headersList.get("x-vercel-ip-country") || "";
+  const lang = getLanguageFromHeaders(acceptLanguage, vercelCountry) || "en";
+
+  const t = (key: string, placeholders: Record<string, string | number> = {}) =>
+    translate(lang, key, placeholders);
+
   return (
-    <html lang="en">
+    <html lang={lang}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;600&display=swap"
@@ -134,10 +145,10 @@ export default function RootLayout({
             FuelCost.info
           </Link>
           <div className="space-x-4 text-sm font-medium">
-            <Link href="/">Home</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/how-to-use">How to Use</Link>
-            <Link href="/about">About</Link>
+            <Link href="/">{t("home")}</Link>
+            <Link href="/blog">{t("blog") || "Blog"}</Link>
+            <Link href="/how-to-use">{t("howToUse")}</Link>
+            <Link href="/about">{t("about") || "About"}</Link>
           </div>
         </nav>
         <main className="flex-grow">{children}</main>
@@ -151,63 +162,63 @@ export default function RootLayout({
               <ul className="space-y-2 text-sm text-gray-600">
                 <li>
                   <Link href="/about" className="hover:text-blue-600">
-                    About
+                    {t("about") || "About"}
                   </Link>
                 </li>
                 <li>
                   <Link href="/blog" className="hover:text-blue-600">
-                    Blog
+                    {t("blog") || "Blog"}
                   </Link>
                 </li>
                 <li>
                   <Link href="/contact" className="hover:text-blue-600">
-                    Contact
+                    {t("contact") || "Contact"}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-sm mb-4 text-[#171717]">
-                Resources
+                {t("resources")}
               </h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li>
                   <Link href="/how-to-use" className="hover:text-blue-600">
-                    How to Use
+                    {t("howToUse")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/faq" className="hover:text-blue-600">
-                    FAQ
+                    {t("faq") || "FAQ"}
                   </Link>
                 </li>
                 <li>
                   <Link href="/sitemap" className="hover:text-blue-600">
-                    Sitemap
+                    {t("sitemap") || "Sitemap"}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-sm mb-4 text-[#171717]">
-                Legal
+                {t("legal")}
               </h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li>
                   <Link href="/privacy" className="hover:text-blue-600">
-                    Privacy Policy
+                    {t("privacyPolicy")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/terms" className="hover:text-blue-600">
-                    Terms of Service
+                    {t("termsOfService")}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-sm mb-4 text-[#171717]">
-                Popular
+                {t("popular")}
               </h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li>
@@ -215,7 +226,7 @@ export default function RootLayout({
                     href="/fuel-cost/en/istanbul"
                     className="hover:text-blue-600"
                   >
-                    Istanbul Prices
+                    {t("istanbulPrices")}
                   </Link>
                 </li>
                 <li>
@@ -223,7 +234,7 @@ export default function RootLayout({
                     href="/fuel-cost/en/new-york"
                     className="hover:text-blue-600"
                   >
-                    New York Prices
+                    {t("newYorkPrices")}
                   </Link>
                 </li>
                 <li>
@@ -231,7 +242,7 @@ export default function RootLayout({
                     href="/fuel-cost/en/london"
                     className="hover:text-blue-600"
                   >
-                    London Prices
+                    {t("londonPrices")}
                   </Link>
                 </li>
                 <li>
@@ -239,7 +250,7 @@ export default function RootLayout({
                     href="/fuel-cost/en/berlin"
                     className="hover:text-blue-600"
                   >
-                    Berlin Prices
+                    {t("berlinPrices")}
                   </Link>
                 </li>
               </ul>
@@ -247,20 +258,19 @@ export default function RootLayout({
           </div>
           <div className="border-t border-[#ebebeb] py-6 text-center text-sm text-gray-500">
             <p>
-              © {new Date().getFullYear()} FuelCost.info — Fuel prices updated
-              daily from official government sources.
+              © {new Date().getFullYear()} FuelCost.info — {t("copyright")}
             </p>
             <p className="mt-1">
               <Link href="/privacy" className="hover:text-blue-600">
-                Privacy
+                {t("privacy")}
               </Link>
               <span className="mx-2">·</span>
               <Link href="/terms" className="hover:text-blue-600">
-                Terms
+                {t("terms")}
               </Link>
               <span className="mx-2">·</span>
               <Link href="/sitemap" className="hover:text-blue-600">
-                Sitemap
+                {t("sitemap") || "Sitemap"}
               </Link>
             </p>
           </div>
