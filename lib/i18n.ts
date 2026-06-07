@@ -118,6 +118,9 @@ export const translations: { [key: string]: any } = {
     "copyright": "Fuel prices updated daily from official government sources.",
     "privacy": "Privacy",
     "terms": "Terms",
+    "electricHome": "Electricity (Home Charging) 🏠",
+    "electricAC": "Electricity (AC Fast Charging) ⚡",
+    "electricDC": "Electricity (DC Fast Charging) 🔋",
 
   },
   "tr": {
@@ -186,6 +189,9 @@ export const translations: { [key: string]: any } = {
     "compareDesc": "{city} şehrindeki yakıt fiyatlarını dünyanın diğer şehirleriyle karşılaştırın:",
     "offersDesc": "{city} şehrinde {fuelList} bulunur. Her yakıt türünün farklı maliyeti, verimliliği ve çevresel etkisi vardır.",
     "and": " ve ",
+    "electricHome": "Elektrik (Evde Şarj) 🏠",
+    "electricAC": "Elektrik (Hızlı Şarj AC) ⚡",
+    "electricDC": "Elektrik (Hızlı Şarj DC) 🔋",
 
   },
   "de": {
@@ -553,6 +559,9 @@ export const translations: { [key: string]: any } = {
     "copyright": "Цены на топливо обновляются ежедневно из официальных государственных источников.",
     "privacy": "Конфиденциальность",
     "terms": "Условия",
+    "electricHome": "Электричество (Домашняя зарядка) 🏠",
+    "electricAC": "Электричество (Быстрая зарядка AC) ⚡",
+    "electricDC": "Электричество (Быстрая зарядка DC) 🔋",
 
   },
   "zh": {

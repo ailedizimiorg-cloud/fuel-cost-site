@@ -86,13 +86,13 @@ export default function Calculator({ initialPrices, countryCode, lang }: Calcula
 
   const getFuelTypeLabel = (key: string) => {
     if (key === "electric_price_home") {
-      return currentLang === "tr" ? "Elektrik (Evde Şarj) 🏠" : "Electricity (Home Charging) 🏠";
+      return translate(currentLang, "electricHome") || "Electricity (Home Charging) 🏠";
     }
     if (key === "electric_price_ac") {
-      return currentLang === "tr" ? "Elektrik (Hızlı Şarj AC) ⚡" : "Electricity (AC Fast Charging) ⚡";
+      return translate(currentLang, "electricAC") || "Electricity (AC Fast Charging) ⚡";
     }
     if (key === "electric_price_dc") {
-      return currentLang === "tr" ? "Elektrik (Hızlı Şarj DC) 🔋" : "Electricity (DC Fast Charging) 🔋";
+      return translate(currentLang, "electricDC") || "Electricity (DC Fast Charging) 🔋";
     }
     return translate(currentLang, `fuelTypes.${key}`);
   };

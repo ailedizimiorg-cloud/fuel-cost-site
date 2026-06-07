@@ -12,7 +12,7 @@ import Calculator from "@/components/Calculator";
 import LanguageSelector from "@/components/LanguageSelector";
 import CitySearch from "@/components/CitySearch";
 import { notFound } from "next/navigation";
-import { translate } from "@/lib/i18n";
+import { translate, translations, getLanguage } from "@/lib/i18n";
 import { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabaseClient";
 import { getLocalizedUrl, getLocalizedSegment, allLanguages, routeTranslations } from "@/lib/route-translations";
@@ -165,7 +165,7 @@ export default async function FuelPage({
   const relatedCities = comparisons.slice(0, 5).filter(Boolean);
 
   const ft: { key: string; label: string }[] = [];
-  const ftLabels: Record<string, string> = (translate(currentLang, "fuelTypes") || {}) as Record<string, string>;
+  const ftLabels: Record<string, string> = (translations[getLanguage(currentLang)]?.["fuelTypes"] || translations["en"]?.["fuelTypes"] || {}) as Record<string, string>;
   if (prices.gasoline_price != null && prices.gasoline_price > 0)
     ft.push({ key: "gasoline", label: ftLabels["gasoline_price"] || "Gasoline" });
   if (prices.diesel_price != null && prices.diesel_price > 0)
