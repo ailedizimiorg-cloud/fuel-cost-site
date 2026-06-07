@@ -104,20 +104,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Detect language: URL path locale first (for city pages like /fuel-cost/pl/warsaw),
+  // Detect language: URL-page-locale header first (set by proxy.ts from /fuel-cost/[lang]/...),
   // then fall back to IP country, then Accept-Language, then default "en".
   const headersList = await headers();
   const acceptLanguage = headersList.get("accept-language") || "en";
   const vercelCountry = headersList.get("x-vercel-ip-country") || "";
+  const pageLocale = headersList.get("x-page-locale");
 
-  const pathHeader =
-    headersList.get("x-invoke-path") ||
-    headersList.get("x-pathname") ||
-    "";
-  const pathLocaleMatch = pathHeader.match(/\/fuel-cost\/([a-z]{2})\//);
-  const pathLocale = pathLocaleMatch ? pathLocaleMatch[1] : null;
   const supportedLangs = ["en","tr","de","fr","es","it","pt","ru","zh","ja","ko","nl","pl","ar","id","vi","hi","uk","ro","sv","no","da","fi","el","cs"];
-  const pathLang = pathLocale && supportedLangs.includes(pathLocale) ? pathLocale : null;
+  const pathLang = pageLocale && supportedLangs.includes(pageLocale) ? pageLocale : null;
 
   const lang = pathLang || getLanguageFromHeaders(acceptLanguage, vercelCountry) || "en";
 

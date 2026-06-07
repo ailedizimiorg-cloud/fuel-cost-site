@@ -47,7 +47,9 @@ export function middleware(request: NextRequest) {
     // Correct localized URL → rewrite to internal /fuel-cost/[lang]/[city]
     const restOfPath = pathname.slice(firstSegment.length + 1);
     const rewriteUrl = new URL(`/fuel-cost${restOfPath}${search}`, request.url);
-    return NextResponse.rewrite(rewriteUrl);
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-page-locale", resolvedLang);
+    return NextResponse.rewrite(rewriteUrl, { request: { headers: requestHeaders } });
   }
 
   // ---- CASE B: Pure /fuel-cost/... internal route (should not normally happen) ----
