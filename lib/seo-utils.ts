@@ -153,6 +153,7 @@ export async function getComparisonData(
 
     return {
       city: `${item.name} (${item.country_code})`,
+      countryCode: item.country_code,
       price: localPrice,
       currencySymbol: localSymbol,
       convertedPrice: convertedPrice,

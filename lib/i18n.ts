@@ -34,7 +34,13 @@ export const countryToLanguage: { [key: string]: string } = {
   "GR": "el",
   "CY": "el",
   "CZ": "cs",
-  "SK": "cs"
+  "SK": "cs",
+  "US": "en",
+  "GB": "en",
+  "AU": "en",
+  "CA": "en",
+  "NZ": "en",
+  "IE": "en"
 };
 
 export const translations: { [key: string]: any } = {

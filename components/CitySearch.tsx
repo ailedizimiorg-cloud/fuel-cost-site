@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { translate } from "@/lib/i18n";
+import { translate, countryToLanguage } from "@/lib/i18n";
 import { getLocalizedUrl } from "@/lib/route-translations";
 
 interface City {
@@ -67,8 +67,9 @@ export default function CitySearch({ lang, className = "" }: CitySearchProps) {
     setQuery("");
     setResults([]);
     setIsOpen(false);
-    // Navigate to city
-    router.push(getLocalizedUrl(lang, city.slug.toLowerCase()));
+    // Navigate to city, using the city's country default language
+    const cityLang = countryToLanguage[city.country_code] || "en";
+    router.push(getLocalizedUrl(cityLang, city.slug.toLowerCase()));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

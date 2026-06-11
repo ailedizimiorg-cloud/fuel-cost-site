@@ -2,7 +2,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { translate, getLanguageFromHeaders } from "@/lib/i18n";
+import { translate, getLanguageFromHeaders, countryToLanguage } from "@/lib/i18n";
+import { getLocalizedUrl } from "@/lib/route-translations";
 import "./globals.css";
 
 const websiteSchema = {
@@ -13,7 +14,7 @@ const websiteSchema = {
   description: "Compare real-time gasoline, diesel, LPG, and EV charging prices across 48,000+ cities worldwide.",
   potentialAction: {
     "@type": "SearchAction",
-    target: "https://fuelcost.info/fuel-cost/en/{search_term}",
+    target: "https://fuelcost.info/yakit-maliyeti/tr/{search_term}",
     "query-input": "required name=search_term",
   },
 };
@@ -229,7 +230,7 @@ export default async function RootLayout({
               <ul className="space-y-2 text-sm text-gray-600">
                 <li>
                   <Link
-                    href="/fuel-cost/en/istanbul"
+                    href={getLocalizedUrl(countryToLanguage["TR"] || "tr", "istanbul")}
                     className="hover:text-blue-600"
                   >
                     {t("istanbulPrices")}
@@ -237,7 +238,7 @@ export default async function RootLayout({
                 </li>
                 <li>
                   <Link
-                    href="/fuel-cost/en/new-york"
+                    href={getLocalizedUrl(countryToLanguage["US"] || "en", "new-york")}
                     className="hover:text-blue-600"
                   >
                     {t("newYorkPrices")}
@@ -245,7 +246,7 @@ export default async function RootLayout({
                 </li>
                 <li>
                   <Link
-                    href="/fuel-cost/en/london"
+                    href={getLocalizedUrl(countryToLanguage["GB"] || "en", "london")}
                     className="hover:text-blue-600"
                   >
                     {t("londonPrices")}
@@ -253,7 +254,7 @@ export default async function RootLayout({
                 </li>
                 <li>
                   <Link
-                    href="/fuel-cost/en/berlin"
+                    href={getLocalizedUrl(countryToLanguage["DE"] || "de", "berlin")}
                     className="hover:text-blue-600"
                   >
                     {t("berlinPrices")}

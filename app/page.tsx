@@ -3,12 +3,24 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CitySearch from "@/components/CitySearch";
+import { countryToLanguage } from "@/lib/i18n";
 import { getLocalizedUrl } from "@/lib/route-translations";
+
+function getCookieLang(): string {
+  if (typeof document === "undefined") return "en";
+  const match = document.cookie.match(/(?:^|;\s*)preferredLanguage=([^;]*)/);
+  return match ? decodeURIComponent(match[1]) : "en";
+}
 
 export default function Home() {
   const router = useRouter();
   const [detecting, setDetecting] = useState(false);
   const [error, setError] = useState("");
+  const [pageLang, setPageLang] = useState("en");
+
+  useEffect(() => {
+    setPageLang(getCookieLang());
+  }, []);
 
   const handleDetectLocation = async () => {
     setDetecting(true);
@@ -17,7 +29,8 @@ export default function Home() {
       const res = await fetch("/api/location");
       const data = await res.json();
       if (data.country && data.city) {
-        router.push(getLocalizedUrl("en", data.city.toLowerCase()));
+        const detectedLang = countryToLanguage[data.country] || "en";
+        router.push(getLocalizedUrl(detectedLang, data.city.toLowerCase()));
       } else {
         setError("Could not detect location. Please use the search bar.");
         setDetecting(false);
@@ -56,7 +69,7 @@ export default function Home() {
 
         {/* Search */}
         <div className="bg-white border border-[#e7e5e4] rounded-xl p-6 mb-6 shadow-sm text-left">
-          <CitySearch lang="en" className="max-w-none" />
+          <CitySearch lang={pageLang} className="max-w-none" />
         </div>
 
         {/* Quick Actions / Status */}

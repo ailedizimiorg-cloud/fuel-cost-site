@@ -42,6 +42,8 @@ export default function LanguageSelector({ currentLang, citySlug }: LanguageSele
   const searchParams = useSearchParams();
 
   const handleLanguageChange = (lang: string) => {
+    // Save preference to cookie (1 year)
+    document.cookie = `preferredLanguage=${lang};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
     // Build localized URL using route translations
     // Preserve existing query params except old 'lang'
     const params = new URLSearchParams(searchParams.toString());

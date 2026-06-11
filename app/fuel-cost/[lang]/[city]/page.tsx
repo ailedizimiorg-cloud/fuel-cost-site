@@ -12,7 +12,7 @@ import Calculator from "@/components/Calculator";
 import LanguageSelector from "@/components/LanguageSelector";
 import CitySearch from "@/components/CitySearch";
 import { notFound } from "next/navigation";
-import { translate, translations, getLanguage } from "@/lib/i18n";
+import { translate, translations, getLanguage, countryToLanguage } from "@/lib/i18n";
 import { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabaseClient";
 import { getLocalizedUrl, getLocalizedSegment, allLanguages, routeTranslations } from "@/lib/route-translations";
@@ -94,6 +94,7 @@ export async function generateMetadata({
 
 interface ComparisonCity {
   city: string;
+  countryCode: string;
   price: number;
   currencySymbol: string;
   convertedPrice: number | null;
@@ -194,7 +195,7 @@ export default async function FuelPage({
         <ol className="flex flex-wrap items-center gap-1.5 text-xs text-[#a8a29e] font-mono">
           <li><a href="/" className="hover:text-[#57534e] transition-colors">FuelCost.info</a></li>
           <li aria-hidden="true">/</li>
-          <li><a href={getLocalizedUrl(currentLang, city.toLowerCase())} className="hover:text-[#57534e] transition-colors">{countryUpper}</a></li>
+          <li><span className="text-[#57534e]">{countryUpper}</span></li>
           <li aria-hidden="true">/</li>
           <li className="text-[#57534e] font-medium" aria-current="page">{cityCap}</li>
         </ol>
@@ -251,7 +252,7 @@ export default async function FuelPage({
           <tbody>
             {comparisons.map((c: ComparisonCity) => {
               const cityName = c.city.split(" (")[0].toLowerCase().replace(/\s+/g, "-");
-              const href = getLocalizedUrl(currentLang, cityName);
+              const href = getLocalizedUrl(countryToLanguage[c.countryCode] || "en", cityName);
               return (
                 <tr key={c.city} className="border-t border-[#e7e5e4] hover:bg-[#faf9f6]/80 transition-colors">
                   <td className="p-4 text-[#44403c]">
@@ -283,7 +284,7 @@ export default async function FuelPage({
             {relatedCities.map((c: ComparisonCity) => {
               const cityName = c.city.split(" (")[0].toLowerCase().replace(/\s+/g, "-");
               return (
-                <a key={c.city} href={getLocalizedUrl(currentLang, cityName)}
+                <a key={c.city} href={getLocalizedUrl(countryToLanguage[c.countryCode] || "en", cityName)}
                   className="block bg-[#faf9f6] border border-[#e7e5e4] rounded-xl p-4 hover:bg-[#f5f4f0] hover:border-[#d6d3d1] transition-all">
                   <div className="font-medium text-[#1c1917]">{c.city}</div>
                   <div className="text-xs text-[#a8a29e] mt-1 font-mono">
