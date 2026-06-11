@@ -18,14 +18,15 @@ interface BlogPost {
   seo_description: string;
 }
 
-async function getPost(slug: string): Promise<BlogPost | null> {
+async function getPost(slug: string, locale: string): Promise<BlogPost | null> {
   const supabase = createClient();
   const { data } = await supabase
     .from("blog_posts")
     .select("*")
     .eq("slug", slug)
+    .eq("locale", locale)
     .eq("published", true)
-    .single();
+    .maybeSingle();
   return data;
 }
 
@@ -39,13 +40,13 @@ async function getLocale(): Promise<string> {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const locale = await getLocale();
+  const post = await getPost(slug, locale) || await getPost(slug, "en"); // fallback to English
   if (!post) return { title: "Not Found" };
 
   const postUrl = `https://fuelcost.info/blog/${slug}`;
   const title = post.seo_title || post.title || "Fuel Price Article";
   const desc = post.seo_description || post.description || "";
-  const locale = post.locale;
   const supportedLangs = post.locale ? [post.locale] : ["en"];
 
   return {
@@ -75,10 +76,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getPost(slug);
-  if (!post) notFound();
-
   const locale = await getLocale();
+  const post = await getPost(slug, locale) || await getPost(slug, "en"); // fallback to English
+  if (!post) notFound();
   const postLocale = post.locale || "en";
 
   return (
