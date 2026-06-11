@@ -218,6 +218,11 @@ export const translations: { [key: string]: any } = {
     "resources": "Kaynaklar",
     "terms": "Koşullar",
     "termsOfService": "Kullanım Koşulları",
+    "about": "Hakkında",
+    "blog": "Blog",
+    "contact": "İletişim",
+    "faq": "SSS",
+    "sitemap": "Site Haritası",
   },
   "de": {
     "title": "Aktuelle Kraftstoffpreise in {city}, {country} - Ratgeber",
@@ -289,6 +294,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Ressourcen",
     "terms": "Bedingungen",
     "termsOfService": "Nutzungsbedingungen",
+
+    "about": "Über uns",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "faq": "FAQ",
+    "sitemap": "Sitemap",
   },
   "fr": {
     "title": "Prix actuels des carburants à {city}, {country} - Guide",
@@ -360,6 +371,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Ressources",
     "terms": "Conditions",
     "termsOfService": "Conditions d'utilisation",
+
+    "about": "À propos",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "sitemap": "Plan du site",
   },
   "es": {
     "title": "Precios actuales del combustible en {city}, {country} - Guía",
@@ -431,6 +448,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Recursos",
     "terms": "Términos",
     "termsOfService": "Términos de servicio",
+
+    "about": "Acerca de",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "faq": "Preguntas frecuentes",
+    "sitemap": "Mapa del sitio",
   },
   "it": {
     "title": "Prezzi attuali del carburante a {city}, {country} - Guida",
@@ -501,6 +524,12 @@ export const translations: { [key: string]: any } = {
     "privacyPolicy": "Informativa sulla privacy",
     "resources": "Risorse",
     "terms": "Termini",
+    "about": "Chi siamo",
+    "blog": "Blog",
+    "contact": "Contatti",
+    "faq": "FAQ",
+    "sitemap": "Mappa del sito",
+
     "termsOfService": "Termini di servizio",
   },
   "pt": {
@@ -572,6 +601,12 @@ export const translations: { [key: string]: any } = {
     "privacyPolicy": "Política de privacidade",
     "resources": "Recursos",
     "terms": "Termos",
+    "about": "Sobre",
+    "blog": "Blog",
+    "contact": "Contato",
+    "faq": "FAQ",
+    "sitemap": "Mapa do site",
+
     "termsOfService": "Termos de serviço",
   },
   "ru": {
@@ -646,6 +681,12 @@ export const translations: { [key: string]: any } = {
     "legal": "Правовая информация",
     "popular": "Популярное",
     "privacyPolicy": "Политика конфиденциальности",
+    "about": "О нас",
+    "blog": "Блог",
+    "contact": "Контакты",
+    "faq": "FAQ",
+    "sitemap": "Карта сайта",
+
     "termsOfService": "Условия использования",
     "istanbulPrices": "Цены в Стамбуле",
     "newYorkPrices": "Цены в Нью-Йорке",
@@ -728,6 +769,12 @@ export const translations: { [key: string]: any } = {
     "privacyPolicy": "隐私政策",
     "resources": "资源",
     "terms": "条款",
+    "about": "关于",
+    "blog": "博客",
+    "contact": "联系我们",
+    "faq": "常见问题",
+    "sitemap": "网站地图",
+
     "termsOfService": "服务条款",
   },
   "ja": {
@@ -799,6 +846,12 @@ export const translations: { [key: string]: any } = {
     "privacyPolicy": "プライバシーポリシー",
     "resources": "リソース",
     "terms": "規約",
+    "about": "概要",
+    "blog": "ブログ",
+    "contact": "お問い合わせ",
+    "faq": "FAQ",
+    "sitemap": "サイトマップ",
+
     "termsOfService": "利用規約",
   },
   "ko": {
@@ -942,6 +995,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Bronnen",
     "terms": "Voorwaarden",
     "termsOfService": "Servicevoorwaarden",
+
+    "about": "Over ons",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "sitemap": "Sitemap",
   },
   "pl": {
     "title": "Aktualne Ceny Paliw w {city}, {country} - Przewodnik",
@@ -1084,6 +1143,12 @@ export const translations: { [key: string]: any } = {
     "resources": "الموارد",
     "terms": "الشروط",
     "termsOfService": "شروط الخدمة",
+
+    "about": "من نحن",
+    "blog": "مدونة",
+    "contact": "اتصل بنا",
+    "faq": "الأسئلة الشائعة",
+    "sitemap": "خريطة الموقع",
   },
   "id": {
     "title": "Harga Bahan Bakar Saat Ini di {city}, {country} - Panduan",
@@ -1155,6 +1220,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Sumber Daya",
     "terms": "Ketentuan",
     "termsOfService": "Ketentuan Layanan",
+
+    "about": "Tentang",
+    "blog": "Blog",
+    "contact": "Kontak",
+    "faq": "FAQ",
+    "sitemap": "Peta Situs",
   },
   "vi": {
     "title": "Giá Xăng Dầu Hiện Tại ở {city}, {country} - Hướng dẫn",
@@ -1226,6 +1297,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Tài nguyên",
     "terms": "Điều khoản",
     "termsOfService": "Điều khoản dịch vụ",
+
+    "about": "Giới thiệu",
+    "blog": "Blog",
+    "contact": "Liên hệ",
+    "faq": "FAQ",
+    "sitemap": "Sơ đồ trang",
   },
   "hi": {
     "title": "{city}, {country} में ईंधन की वर्तमान दरें - गाइड",
@@ -1297,6 +1374,12 @@ export const translations: { [key: string]: any } = {
     "resources": "संसाधन",
     "terms": "शर्तें",
     "termsOfService": "सेवा की शर्तें",
+
+    "about": "हमारे बारे में",
+    "blog": "ब्लॉग",
+    "contact": "संपर्क",
+    "faq": "FAQ",
+    "sitemap": "साइटमैप",
   },
   "uk": {
     "title": "Поточні ціни на пальне в {city}, {country} - Довідник",
@@ -1368,6 +1451,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Ресурси",
     "terms": "Умови",
     "termsOfService": "Умови надання послуг",
+
+    "about": "Про нас",
+    "blog": "Блог",
+    "contact": "Контакти",
+    "faq": "FAQ",
+    "sitemap": "Карта сайту",
   },
   "ro": {
     "title": "Prețurile actuale ale combustibilului în {city}, {country} - Ghid",
@@ -1439,6 +1528,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Resurse",
     "terms": "Termeni",
     "termsOfService": "Termeni și condiții",
+
+    "about": "Despre",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "sitemap": "Harta site-ului",
   },
   "sv": {
     "title": "Aktuella bränslepriser i {city}, {country} - Guide",
@@ -1510,6 +1605,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Resurser",
     "terms": "Villkor",
     "termsOfService": "Användarvillkor",
+
+    "about": "Om oss",
+    "blog": "Blogg",
+    "contact": "Kontakt",
+    "faq": "FAQ",
+    "sitemap": "Sitemap",
   },
   "no": {
     "title": "Aktuelle drivstoffpriser i {city}, {country} - Guide",
@@ -1651,6 +1752,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Ressourcer",
     "terms": "Vilkår",
     "termsOfService": "Servicevilkår",
+
+    "about": "Om os",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "faq": "FAQ",
+    "sitemap": "Sitemap",
   },
   "fi": {
     "title": "Nykyiset polttoaineen hinnat kohteessa {city}, {country} - Opas",
@@ -1722,6 +1829,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Resurssit",
     "terms": "Ehdot",
     "termsOfService": "Käyttöehdot",
+
+    "about": "Tietoa meistä",
+    "blog": "Blogi",
+    "contact": "Yhteystiedot",
+    "faq": "FAQ",
+    "sitemap": "Sivukartta",
   },
   "el": {
     "title": "Τρέχουσες Τιμές Καυσίμων σε {city}, {country} - Οδηγός",
@@ -1793,6 +1906,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Πόροι",
     "terms": "Όροι",
     "termsOfService": "Όροι Υπηρεσίας",
+
+    "about": "Σχετικά",
+    "blog": "Ιστολόγιο",
+    "contact": "Επικοινωνία",
+    "faq": "FAQ",
+    "sitemap": "Χάρτης ιστότοπου",
   },
   "cs": {
     "title": "Aktuální ceny paliv v {city}, {country} - Průvodce",
@@ -1864,6 +1983,12 @@ export const translations: { [key: string]: any } = {
     "resources": "Zdroje",
     "terms": "Podmínky",
     "termsOfService": "Podmínky služby",
+
+    "about": "O nás",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "faq": "FAQ",
+    "sitemap": "Mapa stránek",
   }
 };
 
