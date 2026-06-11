@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { translate, countryToLanguage } from "@/lib/i18n";
 import { getLocalizedUrl } from "@/lib/route-translations";
 
@@ -17,7 +16,6 @@ interface CitySearchProps {
 }
 
 export default function CitySearch({ lang, className = "" }: CitySearchProps) {
-  const router = useRouter();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<City[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -69,11 +67,15 @@ export default function CitySearch({ lang, className = "" }: CitySearchProps) {
     setIsOpen(false);
     // Navigate to city, using the city's country default language
     const cityLang = countryToLanguage[city.country_code] || "en";
-    // Set cookie BEFORE navigation so layout uses correct language on client-side nav
+    const url = getLocalizedUrl(cityLang, city.slug.toLowerCase());
+    // Set cookie BEFORE navigation so layout uses correct language on full page load
     if (typeof document !== "undefined") {
       document.cookie = `preferredLanguage=${cityLang};path=/;max-age=31536000;SameSite=Lax`;
     }
-    router.push(getLocalizedUrl(cityLang, city.slug.toLowerCase()));
+    // Use window.location for full page reload — ensures layout SSR re-runs
+    // with correct headers/cookies. router.push (client-side nav) does NOT
+    // re-render the server-component layout, so nav/footer language stays stale.
+    window.location.href = url;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

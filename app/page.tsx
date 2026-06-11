@@ -30,7 +30,11 @@ export default function Home() {
       const data = await res.json();
       if (data.country && data.city) {
         const detectedLang = countryToLanguage[data.country] || "en";
-        router.push(getLocalizedUrl(detectedLang, data.city.toLowerCase()));
+        const url = getLocalizedUrl(detectedLang, data.city.toLowerCase());
+        if (typeof document !== "undefined") {
+          document.cookie = `preferredLanguage=${detectedLang};path=/;max-age=31536000;SameSite=Lax`;
+        }
+        window.location.href = url;
       } else {
         setError("Could not detect location. Please use the search bar.");
         setDetecting(false);
