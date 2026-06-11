@@ -19,14 +19,24 @@ interface BlogPost {
 }
 
 async function getPost(slug: string, locale: string): Promise<BlogPost | null> {
-  const supabase = createClient();
-  const { data } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("slug", slug)
-    .eq("locale", locale)
-    .maybeSingle();
-  return data;
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .eq("locale", locale)
+      .maybeSingle();
+    if (error) {
+      console.error("[getPost] Supabase error:", JSON.stringify(error));
+      return null;
+    }
+    console.log("[getPost] slug:", slug, "locale:", locale, "found:", !!data);
+    return data;
+  } catch (e) {
+    console.error("[getPost] Exception:", e);
+    return null;
+  }
 }
 
 async function getLocale(): Promise<string> {
