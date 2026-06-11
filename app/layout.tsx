@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import { headers, cookies } from "next/headers";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { translate, getLanguageFromHeaders, countryToLanguage } from "@/lib/i18n";
 import { getLocalizedUrl } from "@/lib/route-translations";
@@ -118,8 +118,8 @@ export default async function RootLayout({
   const supportedLangs = ["en","tr","de","fr","es","it","pt","ru","zh","ja","ko","nl","pl","ar","id","vi","hi","uk","ro","sv","no","da","fi","el","cs"];
   const pathLang = pageLocale && supportedLangs.includes(pageLocale) ? pageLocale : null;
 
-  const cookieStore = await cookies();
-  const cookieLang = cookieStore.get("preferredLanguage")?.value;
+  const cookieHeader = headersList.get("cookie") || "";
+  const cookieLang = cookieHeader.match(/preferredLanguage=([^;]+)/)?.[1];
   const cookieLangValid = cookieLang && supportedLangs.includes(cookieLang) ? cookieLang : null;
 
   const lang = pathLang || cookieLangValid || getLanguageFromHeaders(acceptLanguage, vercelCountry) || "en";
