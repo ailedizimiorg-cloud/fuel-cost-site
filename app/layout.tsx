@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { translate, getLanguageFromHeaders, countryToLanguage } from "@/lib/i18n";
 import { getLocalizedUrl } from "@/lib/route-translations";
+import LanguageSelector from "@/components/LanguageSelector";
 import "./globals.css";
 
 const websiteSchema = {
@@ -158,11 +159,14 @@ export default async function RootLayout({
           >
             FuelCost.info
           </Link>
-          <div className="space-x-4 text-sm font-medium">
-            <Link href="/">{t("home")}</Link>
-            <Link href="/blog">{t("blog") || "Blog"}</Link>
-            <Link href="/how-to-use">{t("howToUse")}</Link>
-            <Link href="/about">{t("about") || "About"}</Link>
+          <div className="flex items-center gap-4">
+            <div className="space-x-4 text-sm font-medium">
+              <Link href="/">{t("home")}</Link>
+              <Link href="/blog">{t("blog") || "Blog"}</Link>
+              <Link href="/how-to-use">{t("howToUse")}</Link>
+              <Link href="/about">{t("about") || "About"}</Link>
+            </div>
+            <LanguageSelector currentLang={lang} />
           </div>
         </nav>
         <main className="flex-grow">{children}</main>

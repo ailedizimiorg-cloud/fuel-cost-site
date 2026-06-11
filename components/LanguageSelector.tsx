@@ -33,7 +33,7 @@ const languages = [
 
 interface LanguageSelectorProps {
   currentLang: string;
-  citySlug: string;
+  citySlug?: string;
 }
 
 export default function LanguageSelector({ currentLang, citySlug }: LanguageSelectorProps) {
@@ -45,11 +45,10 @@ export default function LanguageSelector({ currentLang, citySlug }: LanguageSele
     // Save preference to cookie (1 year)
     document.cookie = `preferredLanguage=${lang};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
     // Build localized URL using route translations
-    // Preserve existing query params except old 'lang'
     const params = new URLSearchParams(searchParams.toString());
     params.delete("lang");
     const qs = params.toString();
-    const localizedUrl = getLocalizedUrl(lang, citySlug) + (qs ? `?${qs}` : "");
+    const localizedUrl = getLocalizedUrl(lang, citySlug || "") + (qs ? `?${qs}` : "");
     router.push(localizedUrl);
   };
 
