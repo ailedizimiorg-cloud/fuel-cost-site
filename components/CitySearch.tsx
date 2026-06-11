@@ -69,6 +69,10 @@ export default function CitySearch({ lang, className = "" }: CitySearchProps) {
     setIsOpen(false);
     // Navigate to city, using the city's country default language
     const cityLang = countryToLanguage[city.country_code] || "en";
+    // Set cookie BEFORE navigation so layout uses correct language on client-side nav
+    if (typeof document !== "undefined") {
+      document.cookie = `preferredLanguage=${cityLang};path=/;max-age=31536000;SameSite=Lax`;
+    }
     router.push(getLocalizedUrl(cityLang, city.slug.toLowerCase()));
   };
 
