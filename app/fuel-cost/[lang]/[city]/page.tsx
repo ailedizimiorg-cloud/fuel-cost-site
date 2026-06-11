@@ -9,7 +9,6 @@ import {
   generateWebAppSchema,
 } from "@/lib/seo-schema";
 import Calculator from "@/components/Calculator";
-import LanguageSelector from "@/components/LanguageSelector";
 import CitySearch from "@/components/CitySearch";
 import { notFound } from "next/navigation";
 import { translate, translations, getLanguage, countryToLanguage } from "@/lib/i18n";
@@ -205,9 +204,6 @@ export default async function FuelPage({
       <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-[#e7e5e4] pb-6">
         <div className="w-full">
           <CitySearch lang={currentLang} className="w-full md:max-w-xs" />
-        </div>
-        <div className="flex-shrink-0">
-          <LanguageSelector currentLang={currentLang} citySlug={city.toLowerCase()} />
         </div>
       </div>
 

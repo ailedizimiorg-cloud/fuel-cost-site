@@ -67,15 +67,12 @@ export default function CitySearch({ lang, className = "" }: CitySearchProps) {
     setIsOpen(false);
     // Navigate to city, using the city's country default language
     const cityLang = countryToLanguage[city.country_code] || "en";
-    const url = getLocalizedUrl(cityLang, city.slug.toLowerCase());
     // Set cookie BEFORE navigation so layout uses correct language on full page load
     if (typeof document !== "undefined") {
       document.cookie = `preferredLanguage=${cityLang};path=/;max-age=31536000;SameSite=Lax`;
     }
-    // Use window.location for full page reload — ensures layout SSR re-runs
-    // with correct headers/cookies. router.push (client-side nav) does NOT
-    // re-render the server-component layout, so nav/footer language stays stale.
-    window.location.href = url;
+    // Use hard navigation to ensure middleware runs and layout renders correct language
+    window.location.href = getLocalizedUrl(cityLang, city.slug.toLowerCase());
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
