@@ -266,6 +266,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG",
       "electric_price": "Elektrizität"
     },
+    "electricHome": "Strom (Haushaltsladung) 🏠",
+    "electricAC": "Strom (AC-Schnellladung) ⚡",
+    "electricDC": "Strom (DC-Schnellladung) 🔋",
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
@@ -343,6 +346,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "GPL",
       "electric_price": "Électricité"
     },
+    "electricHome": "Électricité (Charge à domicile) 🏠",
+    "electricAC": "Électricité (Charge rapide AC) ⚡",
+    "electricDC": "Électricité (Charge rapide DC) 🔋",
     "units": {
       "Liter": "Litre",
       "kWh": "kWh"
@@ -377,6 +383,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Contact",
     "faq": "FAQ",
     "sitemap": "Plan du site",
+    "fuelTypeCol": "Type de carburant",
+    "consumptionCol": "Consommation",
+    "costCol": "Coût",
   },
   "es": {
     "title": "Precios actuales del combustible en {city}, {country} - Guía",
@@ -420,6 +429,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "GLP",
       "electric_price": "Electricidad"
     },
+    "electricHome": "Electricidad (Carga en casa) 🏠",
+    "electricAC": "Electricidad (Carga rápida AC) ⚡",
+    "electricDC": "Electricidad (Carga rápida DC) 🔋",
     "units": {
       "Liter": "Litro",
       "kWh": "kWh"
@@ -454,6 +466,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Contacto",
     "faq": "Preguntas frecuentes",
     "sitemap": "Mapa del sitio",
+    "fuelTypeCol": "Tipo de combustible",
+    "consumptionCol": "Consumo",
+    "costCol": "Coste",
   },
   "it": {
     "title": "Prezzi attuali del carburante a {city}, {country} - Guida",
@@ -497,6 +512,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "GPL",
       "electric_price": "Elettricità"
     },
+    "electricHome": "Elettricità (Ricarica domestica) 🏠",
+    "electricAC": "Elettricità (Ricarica rapida AC) ⚡",
+    "electricDC": "Elettricità (Ricarica rapida DC) 🔋",
     "units": {
       "Liter": "Litro",
       "kWh": "kWh"
@@ -529,6 +547,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Contatti",
     "faq": "FAQ",
     "sitemap": "Mappa del sito",
+    "fuelTypeCol": "Tipo di carburante",
+    "consumptionCol": "Consumo",
+    "costCol": "Costo",
 
     "termsOfService": "Termini di servizio",
   },
@@ -574,6 +595,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "GLP",
       "electric_price": "Eletricidade"
     },
+    "electricHome": "Eletricidade (Carregamento doméstico) 🏠",
+    "electricAC": "Eletricidade (Carregamento rápido AC) ⚡",
+    "electricDC": "Eletricidade (Carregamento rápido DC) 🔋",
     "units": {
       "Liter": "Litro",
       "kWh": "kWh"
@@ -606,6 +630,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Contato",
     "faq": "FAQ",
     "sitemap": "Mapa do site",
+    "fuelTypeCol": "Tipo de combustível",
+    "consumptionCol": "Consumo",
+    "costCol": "Custo",
 
     "termsOfService": "Termos de serviço",
   },
@@ -742,6 +769,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "液化石油气 (LPG)",
       "electric_price": "电力"
     },
+    "electricHome": "电力（家庭充电）🏠",
+    "electricAC": "电力（交流快充）⚡",
+    "electricDC": "电力（直流快充）🔋",
     "units": {
       "Liter": "升",
       "kWh": "度"
@@ -774,6 +804,9 @@ export const translations: { [key: string]: any } = {
     "contact": "联系我们",
     "faq": "常见问题",
     "sitemap": "网站地图",
+    "fuelTypeCol": "燃料类型",
+    "consumptionCol": "消耗",
+    "costCol": "费用",
 
     "termsOfService": "服务条款",
   },
@@ -819,6 +852,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG",
       "electric_price": "電気"
     },
+    "electricHome": "電気（家庭用充電）🏠",
+    "electricAC": "電気（AC急速充電）⚡",
+    "electricDC": "電気（DC急速充電）🔋",
     "units": {
       "Liter": "リットル",
       "kWh": "kWh"
@@ -851,6 +887,9 @@ export const translations: { [key: string]: any } = {
     "contact": "お問い合わせ",
     "faq": "FAQ",
     "sitemap": "サイトマップ",
+    "fuelTypeCol": "燃料タイプ",
+    "consumptionCol": "消費",
+    "costCol": "コスト",
 
     "termsOfService": "利用規約",
   },
@@ -896,6 +935,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG",
       "electric_price": "전기"
     },
+    "electricHome": "전기 (가정용 충전) 🏠",
+    "electricAC": "전기 (AC 급속 충전) ⚡",
+    "electricDC": "전기 (DC 급속 충전) 🔋",
     "units": {
       "Liter": "리터",
       "kWh": "kWh"
@@ -967,6 +1009,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG",
       "electric_price": "Elektriciteit"
     },
+    "electricHome": "Elektriciteit (Thuis opladen) 🏠",
+    "electricAC": "Elektriciteit (AC Snelladen) ⚡",
+    "electricDC": "Elektriciteit (DC Snelladen) 🔋",
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
@@ -1044,6 +1089,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG",
       "electric_price": "Prąd"
     },
+    "electricHome": "Energia elektryczna (Ładowanie domowe) 🏠",
+    "electricAC": "Energia elektryczna (Szybkie ładowanie AC) ⚡",
+    "electricDC": "Energia elektryczna (Szybkie ładowanie DC) 🔋",
     "units": {
       "Liter": "Litr",
       "kWh": "kWh"
@@ -1115,6 +1163,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "الغاز النفطي المسال (LPG)",
       "electric_price": "الكهرباء"
     },
+    "electricHome": "الكهرباء (الشحن المنزلي) 🏠",
+    "electricAC": "الكهرباء (الشحن السريع AC) ⚡",
+    "electricDC": "الكهرباء (الشحن السريع DC) 🔋",
     "units": {
       "Liter": "لتر",
       "kWh": "كيلوواط ساعة"
@@ -1149,6 +1200,9 @@ export const translations: { [key: string]: any } = {
     "contact": "اتصل بنا",
     "faq": "الأسئلة الشائعة",
     "sitemap": "خريطة الموقع",
+    "fuelTypeCol": "نوع الوقود",
+    "consumptionCol": "الاستهلاك",
+    "costCol": "التكلفة",
   },
   "id": {
     "title": "Harga Bahan Bakar Saat Ini di {city}, {country} - Panduan",
@@ -1192,6 +1246,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG",
       "electric_price": "Listrik"
     },
+    "electricHome": "Listrik (Pengisian di Rumah) 🏠",
+    "electricAC": "Listrik (Pengisian Cepat AC) ⚡",
+    "electricDC": "Listrik (Pengisian Cepat DC) 🔋",
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
@@ -1226,6 +1283,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Kontak",
     "faq": "FAQ",
     "sitemap": "Peta Situs",
+    "fuelTypeCol": "Jenis BBM",
+    "consumptionCol": "Konsumsi",
+    "costCol": "Biaya",
   },
   "vi": {
     "title": "Giá Xăng Dầu Hiện Tại ở {city}, {country} - Hướng dẫn",
@@ -1269,6 +1329,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG (Khí hóa lỏng)",
       "electric_price": "Điện"
     },
+    "electricHome": "Điện (Sạc tại nhà) 🏠",
+    "electricAC": "Điện (Sạc nhanh AC) ⚡",
+    "electricDC": "Điện (Sạc nhanh DC) 🔋",
     "units": {
       "Liter": "Lít",
       "kWh": "kWh"
@@ -1303,6 +1366,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Liên hệ",
     "faq": "FAQ",
     "sitemap": "Sơ đồ trang",
+    "fuelTypeCol": "Loại nhiên liệu",
+    "consumptionCol": "Tiêu thụ",
+    "costCol": "Chi phí",
   },
   "hi": {
     "title": "{city}, {country} में ईंधन की वर्तमान दरें - गाइड",
@@ -1346,6 +1412,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "एलपीजी",
       "electric_price": "बिजली"
     },
+    "electricHome": "बिजली (होम चार्जिंग) 🏠",
+    "electricAC": "बिजली (एसी फास्ट चार्जिंग) ⚡",
+    "electricDC": "बिजली (डीसी फास्ट चार्जिंग) 🔋",
     "units": {
       "Liter": "लीटर",
       "kWh": "kWh"
@@ -1380,6 +1449,9 @@ export const translations: { [key: string]: any } = {
     "contact": "संपर्क",
     "faq": "FAQ",
     "sitemap": "साइटमैप",
+    "fuelTypeCol": "ईंधन प्रकार",
+    "consumptionCol": "खपत",
+    "costCol": "लागत",
   },
   "uk": {
     "title": "Поточні ціни на пальне в {city}, {country} - Довідник",
@@ -1423,6 +1495,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "ЗВГ (LPG)",
       "electric_price": "Електрика"
     },
+    "electricHome": "Електроенергія (Домашня зарядка) 🏠",
+    "electricAC": "Електроенергія (Швидка зарядка AC) ⚡",
+    "electricDC": "Електроенергія (Швидка зарядка DC) 🔋",
     "units": {
       "Liter": "Літр",
       "kWh": "кВт·год"
@@ -1500,6 +1575,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "GPL",
       "electric_price": "Electricitate"
     },
+    "electricHome": "Electricitate (Încărcare acasă) 🏠",
+    "electricAC": "Electricitate (Încărcare rapidă AC) ⚡",
+    "electricDC": "Electricitate (Încărcare rapidă DC) 🔋",
     "units": {
       "Liter": "Litru",
       "kWh": "kWh"
@@ -1534,6 +1612,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Contact",
     "faq": "FAQ",
     "sitemap": "Harta site-ului",
+    "fuelTypeCol": "Tip combustibil",
+    "consumptionCol": "Consum",
+    "costCol": "Cost",
   },
   "sv": {
     "title": "Aktuella bränslepriser i {city}, {country} - Guide",
@@ -1577,6 +1658,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "Gasol (LPG)",
       "electric_price": "El"
     },
+    "electricHome": "El (Hemladdning) 🏠",
+    "electricAC": "El (AC-snabbladdning) ⚡",
+    "electricDC": "El (DC-snabbladdning) 🔋",
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
@@ -1654,6 +1738,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "Autogass (LPG)",
       "electric_price": "Elektrisitet"
     },
+    "electricHome": "Elektrisitet (Hjemmelading) 🏠",
+    "electricAC": "Elektrisitet (AC Hurtiglading) ⚡",
+    "electricDC": "Elektrisitet (DC Hurtiglading) 🔋",
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
@@ -1724,6 +1811,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "Autogas (LPG)",
       "electric_price": "Elektricitet"
     },
+    "electricHome": "Elektricitet (Hjemmeopladning) 🏠",
+    "electricAC": "Elektricitet (AC Hurtigopladning) ⚡",
+    "electricDC": "Elektricitet (DC Hurtigopladning) 🔋",
     "units": {
       "Liter": "Liter",
       "kWh": "kWh"
@@ -1801,6 +1891,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "Nestekaasu (LPG)",
       "electric_price": "Sähkö"
     },
+    "electricHome": "Sähkö (Kotilataus) 🏠",
+    "electricAC": "Sähkö (AC-pikalataus) ⚡",
+    "electricDC": "Sähkö (DC-pikalataus) 🔋",
     "units": {
       "Liter": "Litra",
       "kWh": "kWh"
@@ -1834,7 +1927,10 @@ export const translations: { [key: string]: any } = {
     "blog": "Blogi",
     "contact": "Yhteystiedot",
     "faq": "FAQ",
-    "sitemap": "Sivukartta",
+    "sitemap": "Sivustokartta",
+    "fuelTypeCol": "Polttoainetyyppi",
+    "consumptionCol": "Kulutus",
+    "costCol": "Kustannus",
   },
   "el": {
     "title": "Τρέχουσες Τιμές Καυσίμων σε {city}, {country} - Οδηγός",
@@ -1878,6 +1974,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "Υγραέριο (LPG)",
       "electric_price": "Ηλεκτρισμός"
     },
+    "electricHome": "Ηλεκτρισμός (Οικιακή φόρτιση) 🏠",
+    "electricAC": "Ηλεκτρισμός (Ταχεία φόρτιση AC) ⚡",
+    "electricDC": "Ηλεκτρισμός (Ταχεία φόρτιση DC) 🔋",
     "units": {
       "Liter": "Λίτρο",
       "kWh": "kWh"
@@ -1912,6 +2011,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Επικοινωνία",
     "faq": "FAQ",
     "sitemap": "Χάρτης ιστότοπου",
+    "fuelTypeCol": "Τύπος καυσίμου",
+    "consumptionCol": "Κατανάλωση",
+    "costCol": "Κόστος",
   },
   "cs": {
     "title": "Aktuální ceny paliv v {city}, {country} - Průvodce",
@@ -1955,6 +2057,9 @@ export const translations: { [key: string]: any } = {
       "lpg_price": "LPG",
       "electric_price": "Elektřina"
     },
+    "electricHome": "Elektřina (Domácí nabíjení) 🏠",
+    "electricAC": "Elektřina (Rychlé nabíjení AC) ⚡",
+    "electricDC": "Elektřina (Rychlé nabíjení DC) 🔋",
     "units": {
       "Liter": "Litr",
       "kWh": "kWh"
@@ -1989,6 +2094,9 @@ export const translations: { [key: string]: any } = {
     "contact": "Kontakt",
     "faq": "FAQ",
     "sitemap": "Mapa stránek",
+    "fuelTypeCol": "Typ paliva",
+    "consumptionCol": "Spotřeba",
+    "costCol": "Náklady",
   }
 };
 
