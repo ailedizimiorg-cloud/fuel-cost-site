@@ -44,12 +44,21 @@ export default function LanguageSelector({ currentLang, citySlug }: LanguageSele
   const handleLanguageChange = (lang: string) => {
     // Save preference to cookie (1 year)
     document.cookie = `preferredLanguage=${lang};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
-    // Build localized URL using route translations
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("lang");
-    const qs = params.toString();
-    const localizedUrl = getLocalizedUrl(lang, citySlug || "") + (qs ? `?${qs}` : "");
-    router.push(localizedUrl);
+    
+    if (citySlug) {
+      // City page: navigate to same city in new language
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("lang");
+      const qs = params.toString();
+      const localizedUrl = getLocalizedUrl(lang, citySlug) + (qs ? `?${qs}` : "");
+      router.push(localizedUrl);
+    } else {
+      // Non-city page: navigate to home in new language (cookie handles the rest)
+      const localizedHome = getLocalizedUrl(lang, "");
+      // Remove trailing slash — getLocalizedUrl returns "/fuel-cost/en/"
+      const cleanUrl = localizedHome.replace(/\/$/, "");
+      router.push(cleanUrl || "/");
+    }
   };
 
   return (
