@@ -91,9 +91,6 @@ export const metadata: Metadata = {
     images: ["https://fuelcost.info/og-image.svg"],
     creator: "@fuelcostinfo",
   },
-  verification: {
-    google: "ADD_YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE",
-  },
   other: {
     "script:ld+json:website": JSON.stringify(websiteSchema),
     "script:ld+json:org": JSON.stringify(orgSchema),
