@@ -25,7 +25,6 @@ async function getPost(slug: string, locale: string): Promise<BlogPost | null> {
     .select("*")
     .eq("slug", slug)
     .eq("locale", locale)
-    .eq("published", true)
     .maybeSingle();
   return data;
 }

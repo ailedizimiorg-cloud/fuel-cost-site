@@ -32,7 +32,6 @@ async function getPosts(locale: string): Promise<BlogPost[]> {
   const { data } = await supabase
     .from("blog_posts")
     .select("id,slug,title,description,locale,published_at,read_time,category")
-    .eq("published", true)
     .eq("locale", locale)
     .order("published_at", { ascending: false })
     .limit(20);
