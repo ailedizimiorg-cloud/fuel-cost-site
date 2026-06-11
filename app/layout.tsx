@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://fuelcost.info/og-image.png",
+        url: "https://fuelcost.info/og-image.svg",
         width: 1200,
         height: 630,
         alt: "FuelCost.info — Compare Global Fuel Prices",
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
     title: "FuelCost.info — Compare Global Fuel Prices",
     description:
       "Compare real-time fuel prices across 48,000+ cities. Gasoline, diesel, LPG, and EV charging costs.",
-    images: ["https://fuelcost.info/og-image.png"],
+    images: ["https://fuelcost.info/og-image.svg"],
     creator: "@fuelcostinfo",
   },
   verification: {

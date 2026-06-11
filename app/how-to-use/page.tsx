@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "Step-by-step guide to comparing fuel prices and using the trip cost calculator.",
     url: "https://fuelcost.info/how-to-use",
     type: "website",
-    images: [{ url: "https://fuelcost.info/og-image.png", width: 1200, height: 630, alt: "FuelCost.info" }],
+    images: [{ url: "https://fuelcost.info/og-image.svg", width: 1200, height: 630, alt: "FuelCost.info" }],
   },
 };
 

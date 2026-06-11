@@ -99,6 +99,41 @@ export default function Home() {
             {error}
           </p>
         )}
+
+        {/* How It Works */}
+        <h2 className="text-2xl font-semibold mt-16 mb-6 text-center text-[#1c1917]">
+          How It Works
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white border border-[#e7e5e4] rounded-xl p-6 text-left shadow-sm">
+            <h3 className="font-semibold text-lg mb-2 text-[#1c1917]">1. Search a City</h3>
+            <p className="text-sm text-[#6b6661]">Type any city name to find real-time fuel prices — gasoline, diesel, LPG, and EV charging.</p>
+          </div>
+          <div className="bg-white border border-[#e7e5e4] rounded-xl p-6 text-left shadow-sm">
+            <h3 className="font-semibold text-lg mb-2 text-[#1c1917]">2. Compare Costs</h3>
+            <p className="text-sm text-[#6b6661]">See prices side-by-side with automatic currency conversion. Use the built-in cost calculator.</p>
+          </div>
+          <div className="bg-white border border-[#e7e5e4] rounded-xl p-6 text-left shadow-sm">
+            <h3 className="font-semibold text-lg mb-2 text-[#1c1917]">3. Plan Your Trip</h3>
+            <p className="text-sm text-[#6b6661]">Route planner with real fuel costs, CO₂ estimates, and eco-score for every fuel type.</p>
+          </div>
+        </div>
+
+        {/* Popular Cities */}
+        <h2 className="text-2xl font-semibold mb-6 text-center text-[#1c1917]">
+          Popular Cities
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          {["istanbul", "london", "new-york", "berlin", "paris", "tokyo", "dubai", "sydney"].map((city) => (
+            <a
+              key={city}
+              href={`/fuel-cost/en/${city}`}
+              className="bg-white border border-[#e7e5e4] rounded-lg px-4 py-3 text-sm font-medium text-[#1c1917] hover:border-[#a8a29e] hover:bg-[#f5f4f0] transition-all text-center shadow-sm"
+            >
+              {city.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* Footer info */}

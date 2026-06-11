@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "Get in touch with the FuelCost.info team for any questions or suggestions.",
     url: "https://fuelcost.info/contact",
     type: "website",
-    images: [{ url: "https://fuelcost.info/og-image.png", width: 1200, height: 630, alt: "FuelCost.info" }],
+    images: [{ url: "https://fuelcost.info/og-image.svg", width: 1200, height: 630, alt: "FuelCost.info" }],
   },
 };
 

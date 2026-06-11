@@ -80,13 +80,13 @@ export async function generateMetadata({
       siteName: "FuelCost.info",
       locale: lang === "tr" ? "tr_TR" : `${lang}_${lang.toUpperCase()}`,
       type: "website",
-      images: [{ url: `${baseUrl}/og-image.png`, width: 1200, height: 630, alt: `${translatedTitle} - FuelCost.info` }],
+      images: [{ url: `${baseUrl}/og-image.svg`, width: 1200, height: 630, alt: `${translatedTitle} - FuelCost.info` }],
     },
     twitter: {
       card: "summary_large_image",
       title: translatedTitle,
       description,
-      images: [`${baseUrl}/og-image.png`],
+      images: [`${baseUrl}/og-image.svg`],
     },
   };
 }
