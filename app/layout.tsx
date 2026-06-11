@@ -115,14 +115,24 @@ export default async function RootLayout({
   const vercelCountry = headersList.get("x-vercel-ip-country") || "";
   const pageLocale = headersList.get("x-page-locale");
 
+  // x-invoke-path = the actual rendered path; set even on client-side navigations
+  // (unlike x-page-locale which is only set by middleware on full page loads).
+  // Parse locale from URL path segments: /fuel-cost/en/london → "en"
+  const invokePath = headersList.get("x-invoke-path") || "";
+  const invokeSegments = invokePath.split("/").filter(Boolean);
+  // City page paths have 3+ segments: [localizedSeg, langCode, city]
+  const pathLocaleFromUrl = invokeSegments.length >= 3 ? invokeSegments[1] : null;
+
   const supportedLangs = ["en","tr","de","fr","es","it","pt","ru","zh","ja","ko","nl","pl","ar","id","vi","hi","uk","ro","sv","no","da","fi","el","cs"];
   const pathLang = pageLocale && supportedLangs.includes(pageLocale) ? pageLocale : null;
+  const urlPathLang = pathLocaleFromUrl && supportedLangs.includes(pathLocaleFromUrl) ? pathLocaleFromUrl : null;
 
   const cookieHeader = headersList.get("cookie") || "";
   const cookieLang = cookieHeader.match(/preferredLanguage=([^;]+)/)?.[1];
   const cookieLangValid = cookieLang && supportedLangs.includes(cookieLang) ? cookieLang : null;
 
-  const lang = pathLang || cookieLangValid || getLanguageFromHeaders(acceptLanguage, vercelCountry) || "en";
+  // Priority: middleware header → URL path segments (client-side nav) → cookie → geo/accept-lang → "en"
+  const lang = pathLang || urlPathLang || cookieLangValid || getLanguageFromHeaders(acceptLanguage, vercelCountry) || "en";
 
   const t = (key: string, placeholders: Record<string, string | number> = {}) =>
     translate(lang, key, placeholders);
