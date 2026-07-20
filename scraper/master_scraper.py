@@ -1,5 +1,6 @@
 import os
 import time
+import json
 import pandas as pd
 import requests
 from supabase import create_client, Client
@@ -160,6 +161,16 @@ def update_supabase(all_prices_df, rates):
     if all_prices_df is None or all_prices_df.empty:
         print("ℹ️ Supabase'e yazılacak veri yok.")
         return
+    
+    # Use direct REST API (supabase-py doesn't support sb_secret_ keys)
+    import urllib.request
+    api_headers = {
+        "apikey": SUPABASE_SERVICE_KEY,
+        "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
+        "Content-Type": "application/json",
+    }
+    api_url = f"{SUPABASE_URL}/rest/v1/cities"
+    
     for _, row in all_prices_df.iterrows():
         country_code = row['country_code']
         source = row['data_source']
@@ -209,7 +220,12 @@ def update_supabase(all_prices_df, rates):
         if len(payload) > 4:  # Has currency fields + at least one price
             try:
                 print(f"💾 {country_code} verisi local currency ({currency_code}) olarak Supabase'e yazılıyor ({source})...")
-                supabase.table("cities").update(payload).eq("country_code", country_code).execute()
+                data = json.dumps(payload).encode()
+                req = urllib.request.Request(
+                    f"{api_url}?country_code=eq.{country_code}",
+                    data=data, headers=api_headers, method="PATCH",
+                )
+                urllib.request.urlopen(req, timeout=15)
                 print(f"✅ [BAŞARILI] {country_code} güncellendi ({currency_symbol}{payload.get('gasoline_price', '-')}).")
             except Exception as e:
                 print(f"❌ [DB HATASI] {country_code}: {e}")
