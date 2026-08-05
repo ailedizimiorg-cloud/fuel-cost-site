@@ -216,6 +216,38 @@ export default async function FuelPage({
 
       <Calculator initialPrices={prices} countryCode={country} lang={currentLang} />
 
+      {/* Last Updated + Data Source (E-E-A-T freshness signal) */}
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-6 text-xs text-[#a8a29e] font-mono">
+        {prices.updated_at && (
+          <span>
+            {translate(currentLang, "lastUpdated") || "Last updated"}:{" "}
+            {new Date(prices.updated_at).toISOString().slice(0, 10)}
+          </span>
+        )}
+        {prices.data_source && (
+          <span>
+            {translate(currentLang, "dataSource") || "Data Source"}: {prices.data_source}
+          </span>
+        )}
+      </div>
+
+      {/* Unique city analysis block (AdSense value-add) */}
+      <h2 className="text-2xl font-semibold mt-12 mb-4 text-[#1c1917]">
+        {translate(currentLang, "analysisTitle", { city: cityCap, country: countryUpper }) || `Fuel Price Analysis for ${cityCap}`}
+      </h2>
+      <p className="text-base text-[#57534e] mb-8 leading-relaxed">
+        {translate(currentLang, "analysisBody", {
+          city: cityCap,
+          country: countryUpper,
+          currency: currencySymbol,
+          gasoline: (prices.gasoline_price || 0).toFixed(2),
+          diesel: (prices.diesel_price || 0).toFixed(2),
+          lpg: (prices.lpg_price || 0).toFixed(2),
+          electric: (prices.electric_price || 0).toFixed(2),
+          costPer100km: (((prices.gasoline_price || 0) * 8) / 100).toFixed(2),
+        }) || translate(currentLang, "analysisFallback", { city: cityCap, country: countryUpper })}
+      </p>
+
       <h2 className="text-2xl font-semibold mt-16 mb-4 text-[#1c1917]">
         {translate(currentLang, "priceComparisons") || "Fuel Type Comparison"}
       </h2>

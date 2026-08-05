@@ -16,6 +16,7 @@ export interface FuelPrices {
   lat: number | null;
   lng: number | null;
   name?: string | null;
+  updated_at?: string | null;
 }
 
 export const getFuelPrices = cache(async (countryCode: string, city: string): Promise<FuelPrices | null> => {
@@ -24,7 +25,7 @@ export const getFuelPrices = cache(async (countryCode: string, city: string): Pr
   console.log(`[${countryCode}] Admin client created. Querying Supabase...`);
   const { data, error } = await supabase
     .from('cities')
-    .select('gasoline_price, diesel_price, lpg_price, electric_price, data_source, currency, currency_code, currency_symbol, lat, lng, name')
+    .select('gasoline_price, diesel_price, lpg_price, electric_price, data_source, currency, currency_code, currency_symbol, lat, lng, name, updated_at')
     .eq('country_code', countryCode.toUpperCase()) // Filtreyi geri ekledik
     .eq('slug', city)
     .limit(1)
@@ -85,6 +86,7 @@ export const getFuelPrices = cache(async (countryCode: string, city: string): Pr
     lat: data.lat !== null && data.lat !== undefined ? parseFloat(data.lat) : null,
     lng: data.lng !== null && data.lng !== undefined ? parseFloat(data.lng) : null,
     name: data.name || null,
+    updated_at: data.updated_at || null,
   };
 });
 
