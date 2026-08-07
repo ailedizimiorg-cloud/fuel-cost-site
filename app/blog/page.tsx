@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Fuel Price Blog - Insights, Analysis & Trends | FuelCost.info",
+  title: "Fuel Price Blog - Insights, Analysis & Trends",
   description: "Expert analysis on global fuel prices, energy market trends, EV charging costs, and money-saving tips for drivers worldwide.",
   alternates: { canonical: "https://fuelcost.info/blog" },
   openGraph: {
