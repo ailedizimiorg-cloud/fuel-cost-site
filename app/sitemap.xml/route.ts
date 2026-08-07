@@ -12,12 +12,23 @@ export async function GET() {
     .from('cities')
     .select('*', { count: 'exact', head: true });
 
+  // Blog post count — used to add a blog sub-sitemap so articles are discoverable
+  const { count: blogCount } = await supabase
+    .from('blog_posts')
+    .select('*', { count: 'exact', head: true })
+    .eq('locale', 'en');
+
   const totalCities = count || 1;
   const sitemapCount = Math.ceil(totalCities / CHUNK_SIZE);
 
   const citySitemaps = Array.from({ length: sitemapCount }, (_, i) =>
     `  <sitemap>\n    <loc>https://fuelcost.info/sitemap/${i}.xml</loc>\n  </sitemap>`
   ).join('\n');
+
+  // Blog articles sub-sitemap (English) so Google discovers individual posts
+  const blogSitemap = (blogCount || 0) > 0
+    ? `  <sitemap>\n    <loc>https://fuelcost.info/sitemap/blog.xml</loc>\n  </sitemap>`
+    : '';
 
   const staticPages = [
     { loc: 'https://fuelcost.info/', priority: '1.0', changefreq: 'daily' },
@@ -38,6 +49,7 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticEntries}
+${blogSitemap}
 ${citySitemaps}
 </sitemapindex>`;
 
