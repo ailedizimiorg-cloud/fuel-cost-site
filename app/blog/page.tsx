@@ -34,7 +34,7 @@ async function getPosts(locale: string): Promise<BlogPost[]> {
     .select("id,slug,title,description,locale,published_at,read_time,category")
     .eq("locale", locale)
     .order("published_at", { ascending: false })
-    .limit(20);
+    .limit(50);
   return data || [];
 }
 
