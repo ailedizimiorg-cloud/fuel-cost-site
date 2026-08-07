@@ -54,7 +54,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return { title: "Not Found" };
 
   const postUrl = `https://fuelcost.info/blog/${slug}`;
-  const title = post.seo_title || post.title || "Fuel Price Article";
+  // Use plain title — root layout template ("%s | FuelCost.info") appends the brand.
+  // seo_title already contains "| FuelCost.info", which caused a duplicate suffix.
+  const title = post.title || post.seo_title?.replace(/\s*\| FuelCost\.info\s*$/, "") || "Fuel Price Article";
   const desc = post.seo_description || post.description || "";
   const supportedLangs = post.locale ? [post.locale] : ["en"];
 
