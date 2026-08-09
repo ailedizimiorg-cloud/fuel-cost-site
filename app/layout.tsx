@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     template: "%s | FuelCost.info",
   },
   description:
-    "Compare real-time gasoline, diesel, LPG, and electric vehicle charging costs across 48,000+ cities worldwide. Automatic currency conversion and eco-score comparison.",
+    "Compare real-time gasoline, diesel, LPG, and EV charging costs across 48,000+ cities worldwide. Automatic currency conversion and eco-score comparison.",
   keywords: [
     "fuel prices",
     "gasoline prices",
@@ -65,6 +65,12 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://fuelcost.info",
+    // Homepage is a single auto-localizing URL (no per-language home paths) —
+    // en self-reference + x-default fallback is the correct hreflang pattern.
+    languages: {
+      en: "https://fuelcost.info",
+      "x-default": "https://fuelcost.info",
+    },
   },
   openGraph: {
     title: "FuelCost.info — Compare Global Fuel Prices",
